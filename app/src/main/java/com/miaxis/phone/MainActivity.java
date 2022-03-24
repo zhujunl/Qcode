@@ -2,13 +2,28 @@ package com.miaxis.phone;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.miaxis.common.activity.BaseBindingFragmentActivity;
+import com.miaxis.phone.databinding.ActivityMainBinding;
+import com.miaxis.phone.ui.health_code.FragmentHealthCode;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+public class MainActivity extends BaseBindingFragmentActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int initLayout() {
+        return R.layout.activity_main;
     }
+
+    @Override
+    protected void initView(@NonNull ActivityMainBinding binding, @Nullable Bundle savedInstanceState) {
+
+
+
+
+
+        replace(R.id.fl_root, FragmentHealthCode.newInstance("哈哈哈哈","342921199911112222",0));
+    }
+
 }
