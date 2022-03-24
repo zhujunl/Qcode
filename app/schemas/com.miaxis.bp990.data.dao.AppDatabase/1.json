@@ -1,0 +1,138 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "c356fc20e4b94d820ed50da486f5ec01",
+    "entities": [
+      {
+        "tableName": "Person",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `cardnum` TEXT, `facepath` TEXT, `finger1` TEXT, `finger2` TEXT, `codestatus` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardnum",
+            "columnName": "cardnum",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "facepath",
+            "columnName": "facepath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finger1",
+            "columnName": "finger1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finger2",
+            "columnName": "finger2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "codestatus",
+            "columnName": "codestatus",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Config",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `deviceIMEI` TEXT, `qualityScore` INTEGER NOT NULL, `registerQualityScore` INTEGER NOT NULL, `verifyScore` REAL NOT NULL, `verifyMaskScore` REAL NOT NULL, `maskScore` INTEGER NOT NULL, `deviceStatus` TEXT, `heartBeatInterval` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deviceIMEI",
+            "columnName": "deviceIMEI",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qualityScore",
+            "columnName": "qualityScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "registerQualityScore",
+            "columnName": "registerQualityScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verifyScore",
+            "columnName": "verifyScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verifyMaskScore",
+            "columnName": "verifyMaskScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maskScore",
+            "columnName": "maskScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deviceStatus",
+            "columnName": "deviceStatus",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "heartBeatInterval",
+            "columnName": "heartBeatInterval",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c356fc20e4b94d820ed50da486f5ec01')"
+    ]
+  }
+}
