@@ -11,12 +11,10 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.miaxis.bp990.Util.FileUtil;
-import com.miaxis.bp990.Util.ValueUtil;
+import com.miaxis.bp990.util.ValueUtil;
 import com.miaxis.bp990.been.Intermediary;
 import com.miaxis.bp990.been.MxRGBImage;
 import com.miaxis.bp990.been.PhotoFaceFeature;
-import com.miaxis.bp990.data.entity.ConfigManager;
 import com.miaxis.bp990.event.DrawRectEvent;
 import com.miaxis.bp990.event.VerifyEvent;
 
@@ -83,7 +81,7 @@ public class FaceManager {
      * @return 状态码
      */
     public int initFaceST(Context context, String licencePath) {
-        final String sLicence = FileUtil.readLicence(licencePath);
+//        final String sLicence = FileUtil.readLicence(licencePath);
         //BP-990 不用授权文件自动授权
 //        if (TextUtils.isEmpty(sLicence)) {
 //            return ERR_LICENCE;
@@ -92,11 +90,13 @@ public class FaceManager {
         asyncDetectThread = new HandlerThread("detect_thread");
         asyncDetectThread.setPriority(3);
         asyncDetectThread.start();
+        Log.e("FaceManager:","asyncDetectHandler"+"000");
         asyncDetectHandler = new Handler(asyncDetectThread.getLooper()) {
             public void handleMessage(Message msg) {
-                if (detectLoop) {
+                Log.e("FaceManager:","asyncDetectHandler"+"11111");
+                if (detectLoop) {Log.e("FaceManager:","asyncDetectHandler"+"222222");
                     previewDataLoop();
-                }
+                }Log.e("FaceManager:","asyncDetectHandler"+"33333");
             }
         };
         asyncExtractThread = new HandlerThread("extract_thread");
@@ -178,6 +178,7 @@ public class FaceManager {
 
     private void verify(byte[] detectData) {
         try {
+            Log.w("FaceManager:",""+detectData);
             String message = "";
             long time = System.currentTimeMillis();
             byte[] zoomedRgbData = cameraPreviewConvert(detectData, CameraManager.PRE_WIDTH, CameraManager.PRE_HEIGHT, orientation, ZOOM_WIDTH, ZOOM_HEIGHT);
@@ -230,7 +231,7 @@ public class FaceManager {
         }
     }
 
-    Bitmap adjustPhotoRotation(Bitmap bitmap, int orientationDegree) {
+    public Bitmap adjustPhotoRotation(Bitmap bitmap, int orientationDegree) {
         Matrix matrix = new Matrix();
         matrix.setRotate(orientationDegree, (float) bitmap.getWidth() / 2,
                 (float) bitmap.getHeight() / 2);
@@ -280,10 +281,12 @@ public class FaceManager {
     private void extract(Intermediary intermediary) {
         try {
             if (needNextFeature) {
-                if (intermediary.mxFaceInfoEx.quality > ConfigManager.getInstance().getConfig().getQualityScore()) {
+//                if (intermediary.mxFaceInfoEx.quality > ConfigManager.getInstance().getConfig().getQualityScore()) {
+                if (intermediary.mxFaceInfoEx.quality > ValueUtil.DEFAULT_QUALITY_SCORE) {
                     boolean result = detectMask(intermediary.data, ZOOM_WIDTH, ZOOM_HEIGHT, intermediary.mxFaceInfoEx);
                     if (result) {
-                        boolean mask = intermediary.mxFaceInfoEx.mask > ConfigManager.getInstance().getConfig().getMaskScore();
+//                        boolean mask = intermediary.mxFaceInfoEx.mask > ConfigManager.getInstance().getConfig().getMaskScore();
+                        boolean mask = intermediary.mxFaceInfoEx.mask > ValueUtil.DEFAULT_MASK_SCORE;
                         byte[] feature;
                         if (mask) {
                             feature = extractMaskFeature(intermediary.data, ZOOM_WIDTH, ZOOM_HEIGHT, intermediary.mxFaceInfoEx);
@@ -413,7 +416,8 @@ public class FaceManager {
             if (pFaceNum[0] == 1) {
                 result = faceQuality(rgbData, bitmap.getWidth(), bitmap.getHeight(), pFaceNum[0], pFaceBuffer);
                 MXFaceInfoEx mxFaceInfoEx = sortMXFaceInfoEx(pFaceBuffer);
-                if (result && mxFaceInfoEx.quality > ConfigManager.getInstance().getConfig().getRegisterQualityScore()) {
+//                if (result && mxFaceInfoEx.quality > ConfigManager.getInstance().getConfig().getRegisterQualityScore()) {
+                if (result && mxFaceInfoEx.quality > ValueUtil.DEFAULT_REGISTER_QUALITY_SCORE) {
                     byte[] faceFeature = extractFeature(rgbData, bitmap.getWidth(), bitmap.getHeight(), mxFaceInfoEx);
                     if (faceFeature != null) {
                         byte[] maskFaceFeature = extractMaskFeatureForRegister(rgbData, bitmap.getWidth(), bitmap.getHeight(), mxFaceInfoEx);

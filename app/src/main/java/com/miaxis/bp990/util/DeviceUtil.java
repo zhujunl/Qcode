@@ -1,4 +1,4 @@
-package com.miaxis.bp990.Util;
+package com.miaxis.bp990.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

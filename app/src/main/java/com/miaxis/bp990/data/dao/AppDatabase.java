@@ -2,7 +2,6 @@ package com.miaxis.bp990.data.dao;
 
 import android.app.Application;
 
-import com.miaxis.bp990.data.entity.Config;
 import com.miaxis.bp990.data.entity.Person;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Person.class, Config.class}, version = 1)
+@Database(entities = {Person.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DBName = "BpEntry.db";
@@ -47,6 +46,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract PersonDao persondao();
 
-    public abstract ConfigDao configdao();
 
 }

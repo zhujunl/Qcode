@@ -3,8 +3,8 @@ package com.miaxis.bp990.App;
 import android.app.Application;
 
 import com.miaxis.bp990.data.dao.AppDatabase;
-import com.miaxis.bp990.data.entity.ConfigManager;
 import com.miaxis.bp990.manager.FaceManager;
+import com.miaxis.bp990.util.FileUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,9 +27,9 @@ public class App extends Application{
     }
 
     public void initApplication(){
+        FileUtil.initDirectory();
         int result = FaceManager.getInstance().initFaceST(getApplicationContext(), "");
         AppDatabase.initDB(this);
-        ConfigManager.getInstance().checkConfig();
     }
 
     public static App getInstance(){

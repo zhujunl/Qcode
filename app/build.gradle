@@ -38,6 +38,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -54,6 +59,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
 
     implementation files('src/main/libs/IDCardComDriver.jar')
+    implementation files('src/main/libs/MxMscFingerApi.jar')
     //Room
     implementation 'androidx.room:room-runtime:2.2.5'
     annotationProcessor "androidx.room:room-compiler:2.2.5"
@@ -67,4 +73,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-scalars:2.7.0'
     //Speedata
     implementation 'com.github.SpeedataG:Device:1.6.4'
+    //Dialog
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    //Toasty
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
 }

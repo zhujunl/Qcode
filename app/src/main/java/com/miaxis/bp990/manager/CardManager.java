@@ -10,18 +10,14 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.miaxis.bp990.App.App;
-import com.miaxis.bp990.Util.ValueUtil;
 import com.miaxis.bp990.been.IDCardRecord;
 import com.miaxis.bp990.manager.idpower.BP990_IdCardPower;
 import com.miaxis.bp990.manager.idpower.BP990s_IdCardPower;
 import com.miaxis.bp990.manager.idpower.IIdCardPower;
+import com.miaxis.bp990.util.ValueUtil;
 import com.zz.impl.IDCardDeviceImpl;
 import com.zz.impl.IDCardInterfaceService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -170,18 +166,7 @@ public class CardManager {
         return new IDCardRecord.Builder()
                 .cardType("")
                 .name(cardManager.getName())
-                .birthday(cardManager.getBorn())
-                .address(cardManager.getAddress())
                 .cardNumber(cardManager.getIdNumber())
-                .issuingAuthority(cardManager.getIssueOffice())
-                .validateStart(cardManager.getBeginDate())
-                .validateEnd(cardManager.getEndDate())
-                .sex(cardManager.getSex())
-                .nation(cardManager.getNation())
-                .passNumber("")
-                .issueCount("")
-                .chineseName("")
-                .version("")
                 .cardBitmap(cardManager.getPhotoBmp())
                 .build();
     }
@@ -190,15 +175,7 @@ public class CardManager {
         return new IDCardRecord.Builder()
                 .cardType("I")
                 .name(cardManager.getEnglishName())
-                .birthday(cardManager.getBorn())
                 .cardNumber(cardManager.getIdNumber())
-                .issuingAuthority(cardManager.getIssueOffice())
-                .validateStart(cardManager.getBeginDate())
-                .validateEnd(cardManager.getEndDate())
-                .sex(cardManager.getSex())
-                .nation(cardManager.getAreaCode())
-                .chineseName(cardManager.getName())
-                .version(cardManager.getCardVersionNum())
                 .cardBitmap(cardManager.getPhotoBmp())
                 .build();
     }
@@ -207,16 +184,7 @@ public class CardManager {
         return new IDCardRecord.Builder()
                 .cardType("J")
                 .name(cardManager.getName())
-                .birthday(cardManager.getBorn())
-                .address(cardManager.getAddress())
                 .cardNumber(cardManager.getIdNumber())
-                .issuingAuthority(cardManager.getIssueOffice())
-                .validateStart(cardManager.getBeginDate())
-                .validateEnd(cardManager.getEndDate())
-                .sex(cardManager.getSex())
-                .nation(cardManager.getNation())
-                .passNumber(cardManager.getPassportNum())
-                .issueCount(cardManager.getIssueCount())
                 .cardBitmap(cardManager.getPhotoBmp())
                 .build();
     }
@@ -233,7 +201,6 @@ public class CardManager {
             idCardRecord.setFingerprintPosition0(ValueUtil.fingerPositionCovert(bFingerData0[5]));
             idCardRecord.setFingerprint1(Base64.encodeToString(bFingerData1, Base64.NO_WRAP));
             idCardRecord.setFingerprintPosition1(ValueUtil.fingerPositionCovert(bFingerData1[5]));
-            idCardRecord.setIsfinger(bFingerData0[5] != 0 || bFingerData1[5] != 0);
         }
     }
 
@@ -242,15 +209,15 @@ public class CardManager {
      *
      * @return true - 已过期 false - 未过期
      */
-    public boolean checkIsOutValidate(IDCardRecord idCardRecord) {
-        try {
-            SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-            Date validEndDate = myFmt.parse(idCardRecord.getValidateEnd());
-            return validEndDate.getTime() < System.currentTimeMillis();
-        } catch (ParseException e) {
-            return false;
-        }
-    }
+//    public boolean checkIsOutValidate(IDCardRecord idCardRecord) {
+//        try {
+//            SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+////            Date validEndDate = myFmt.parse(idCardRecord.getValidateEnd());
+////            return validEndDate.getTime() < System.currentTimeMillis();
+//        } catch (ParseException e) {
+//            return false;
+//        }
+//    }
 
     private String readSamId() {
         try {

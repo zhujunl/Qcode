@@ -1,4 +1,4 @@
-package com.miaxis.bp990.Util;
+package com.miaxis.bp990.util;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -31,7 +31,7 @@ import java.util.Objects;
 public class FileUtil {
 
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "miaxis";
-    public static final String MAIN_PATH = PATH + File.separator + "postal";
+    public static final String MAIN_PATH = PATH + File.separator + "BP";
     public static final String APP_PATH = MAIN_PATH + File.separator + "APP";
     public static final String LICENCE_PATH = PATH + File.separator + "FaceId_ST" + File.separator + "st_lic.txt";
     public static final String FACE_IMAGE_PATH = MAIN_PATH + File.separator + "recordImage";
@@ -39,6 +39,7 @@ public class FileUtil {
     public static final String FACE_STOREHOUSE_PATH = MAIN_PATH + File.separator + "faceStorehouse";
     public static final String ORDER_STOREHOUSE_PATH = MAIN_PATH + File.separator + "orderStorehouse";
     public static final String LOCAL_STOREHOUSE_PATH = MAIN_PATH + File.separator + "localStorehouse";
+    public static final String PICTURE=MAIN_PATH+File.separator+"picture";
 
     public static String getAppCacheRootDir(Context context) {
         if (context == null) {
@@ -74,6 +75,10 @@ public class FileUtil {
         }
         path = new File(FileUtil.IMAGE_PATH);
         if (!path.exists()) {
+            path.mkdirs();
+        }
+        path=new File(FileUtil.PICTURE);
+        if(!path.exists()){
             path.mkdirs();
         }
     }

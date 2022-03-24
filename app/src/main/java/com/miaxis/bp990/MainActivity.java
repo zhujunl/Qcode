@@ -1,134 +1,164 @@
 package com.miaxis.bp990;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.miaxis.bp990.App.App;
-import com.miaxis.bp990.been.IDCardRecord;
-import com.miaxis.bp990.data.entity.Person;
-import com.miaxis.bp990.data.entity.PersonManager;
-import com.miaxis.bp990.manager.CameraManager;
-import com.miaxis.bp990.manager.CardManager;
+import com.miaxis.bp990.base.BaseActivity;
+import com.miaxis.bp990.base.BaseViewModelFragment;
+import com.miaxis.bp990.base.OnFragmentInteractionListener;
+import com.miaxis.bp990.databinding.ActivityMainBinding;
+import com.miaxis.bp990.view.home.HomeFragmet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import androidx.fragment.app.Fragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<ActivityMainBinding> implements OnFragmentInteractionListener {
 
-    private final String TAG="MainActivity";
+    private MaterialDialog waitDialog;
+    private MaterialDialog resultDialog;
+    private MaterialDialog quitDialog;
+    private String root;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Disposable disposable=Observable.create((ObservableOnSubscribe<Boolean>) e->{
-            App.getInstance().initApplication();
-            e.onNext(true);
-        }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(f->{
-                    Log.e(TAG,"成功");
-                },throwable -> Log.e(TAG,"失败"));
-//        initView();
-
-        initCamera();
-
+        App.getInstance().initApplication();
     }
 
-    private void initView(){
-        findViewById(R.id.button).setOnClickListener(v-> {
-            Person person=new Person("name","cardnum","facepath","finger1","finger2","aa");
-            Disposable disposable=Observable.create((ObservableOnSubscribe<Boolean>) e->{
-                PersonManager.getInstance().Save(person);
-            }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(flag->{
-                        Toast.makeText(this, "成功", Toast.LENGTH_SHORT).show();
-                    },throwable->{
-                        Toast.makeText(this, "不成功", Toast.LENGTH_SHORT).show();
-                    });
+    @Override
+    protected int setContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initData() {
+        replaceFragment(HomeFragmet.getInstance());
+    }
+
+    @Override
+    protected void initView() {
+        initDialog();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment visibleFragment = getVisibleFragment();
+        if (visibleFragment != null) {
+            BaseViewModelFragment fragment = (BaseViewModelFragment) visibleFragment;
+            fragment.onBackPressed();
+        }
+    }
+
+    @Override
+    public void setRoot(Fragment fragment) {
+        root = fragment.getClass().getName();
+    }
+
+    @Override
+    public void backToRoot() {
+        getSupportFragmentManager().popBackStack(root, 1);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideInputMethod();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fg, fragment)
+                        .addToBackStack(fragment.getClass().getName())
+                        .commit();
+            }
         });
     }
 
-    private void initCard(){
-        CardManager.getInstance().init(this, new CardManager.IDCardListener() {
-            @Override
-            public void onIDCardInitResult(boolean result) {
-                Log.e(TAG,"CardManager"+result);
+    @Override
+    public void backToStack(Class<? extends Fragment> fragment) {
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount > 1) {
+            if (fragment != null) {
+                getSupportFragmentManager()
+                        .popBackStackImmediate(fragment.getName(), 0);
+            } else {
+                getSupportFragmentManager().popBackStackImmediate(null, 0);
             }
+        } else {
+            exitApp();
+        }
+    }
 
+
+    @Override
+    public void showWaitDialog(String message) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onIDCardReceive(IDCardRecord idCardRecord, String message) {
-                if (idCardRecord!=null){
+            public void run() {
+                waitDialog.getContentView().setText(message);
+                waitDialog.show();
+            }
+        });
+    }
 
-                    Log.e(TAG,"CardManager"+idCardRecord);
+    @Override
+    public void dismissWaitDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (waitDialog.isShowing()) {
+                    waitDialog.dismiss();
                 }
             }
         });
     }
 
-    RoundTextureView rtvCamera;
-    FrameLayout flCamera;
-    RoundFrameLayout roundFrameLayout;
-    RoundBorderView roundBorderView;
-    
-    private void initCamera(){
-        rtvCamera=findViewById(R.id.rtv_camera);
-        flCamera=findViewById(R.id.fl_camera);
-        rtvCamera.getViewTreeObserver().addOnGlobalLayoutListener(globalListener);
+    @Override
+    public void showResultDialog(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resultDialog.getContentView().setText(message);
+                resultDialog.show();
+            }
+        });
     }
 
-    private ViewTreeObserver.OnGlobalLayoutListener globalListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-            rtvCamera.getViewTreeObserver().removeOnGlobalLayoutListener(globalListener);
-            ViewGroup.LayoutParams layoutParams = rtvCamera.getLayoutParams();
-            layoutParams.width = flCamera.getWidth();
-            layoutParams.height = flCamera.getHeight();
-            rtvCamera.setLayoutParams(layoutParams);
-            rtvCamera.turnRound();
-            CameraManager.getInstance().resetRetryTime();
-            CameraManager.getInstance().openBackCamera(rtvCamera, cameraListener);
-        }
-    };
-
-    private CameraManager.OnCameraOpenListener cameraListener = previewSize -> {
-        FrameLayout.LayoutParams textureViewLayoutParams = (FrameLayout.LayoutParams) rtvCamera.getLayoutParams();
-        int newHeight = textureViewLayoutParams.width * previewSize.width / previewSize.height;
-        int newWidth = textureViewLayoutParams.width;
-
-        roundFrameLayout = new RoundFrameLayout(this);
-        int sideLength = Math.min(newWidth, newHeight);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(sideLength, sideLength);
-        roundFrameLayout.setLayoutParams(layoutParams);
-        FrameLayout parentView = (FrameLayout) rtvCamera.getParent();
-        parentView.removeView(rtvCamera);
-        parentView.addView(roundFrameLayout);
-
-        roundFrameLayout.addView(rtvCamera);
-        FrameLayout.LayoutParams newTextureViewLayoutParams = new FrameLayout.LayoutParams(newWidth, newHeight);
-        newTextureViewLayoutParams.topMargin = -(newHeight - newWidth) / 2;
-        rtvCamera.setLayoutParams(newTextureViewLayoutParams);
-
-        View siblingView = roundFrameLayout != null ? roundFrameLayout : rtvCamera;
-        roundBorderView = new RoundBorderView(this);
-        ((FrameLayout) siblingView.getParent()).addView(roundBorderView, siblingView.getLayoutParams());
-
-        new Handler(Looper.getMainLooper()).post(() -> {
-            roundFrameLayout.setRadius(Math.min(roundFrameLayout.getWidth(), roundFrameLayout.getHeight()) / 2);
-            roundFrameLayout.turnRound();
-            roundBorderView.setRadius(Math.min(roundBorderView.getWidth(), roundBorderView.getHeight()) / 2);
-            roundBorderView.turnRound();
+    @Override
+    public void dismissResultDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (resultDialog.isShowing()) {
+                    resultDialog.dismiss();
+                }
+            }
         });
-    };
+    }
+
+    @Override
+    public void exitApp() { quitDialog.show(); }
+
+    private void initDialog() {
+        waitDialog = new MaterialDialog.Builder(this)
+                .progress(true, 100)
+                .content("请稍后")
+                .cancelable(false)
+                .autoDismiss(false)
+                .build();
+        quitDialog = new MaterialDialog.Builder(this)
+                .title("确认退出?")
+                .positiveText("确认")
+                .onPositive((dialog, which) -> {
+                    finish();
+                    System.exit(0);
+                })
+                .negativeText("取消")
+                .build();
+        resultDialog = new MaterialDialog.Builder(this)
+                .content("")
+                .positiveText("确认")
+                .build();
+    }
+
 }
