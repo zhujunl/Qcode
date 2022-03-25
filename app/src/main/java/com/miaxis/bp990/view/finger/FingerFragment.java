@@ -1,5 +1,6 @@
 package com.miaxis.bp990.view.finger;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -29,6 +30,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
     private OnFragmentInteractionListener mListener;
     private Person person;
     private MaterialDialog retryDialog;
+    private int status;
 
     public static FingerFragment getInstance(){
         if(instance==null){
@@ -44,6 +46,16 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         instance.setPerson(person);
         return instance;
     }
+
+    public static FingerFragment getInstance(Person person,int status){
+        if (instance==null){
+            instance=new FingerFragment();
+        }
+        instance.setPerson(person);
+        instance.setStatus(status);
+        return instance;
+    }
+
 
 
 
@@ -75,7 +87,8 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
     @Override
     protected void initView() {
         viewModel.personlive.setValue(person);
-        binding.tvSwitch.setOnClickListener(v->{mListener.replaceFragment(FaceFragment.getInstance());});
+        binding.ivBack.setOnClickListener(v->onBackPressed());
+        binding.tvSwitch.setOnClickListener(v->{mListener.replaceFragment(FaceFragment.getInstance(person));});
         binding.title.setText(person.getName());
         viewModel.fingerResultFlag.observe(this, fingerResultFlagObserver);
         viewModel.initFingerResult.observe(this, status -> {
@@ -137,12 +150,47 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         this.person=person;
     }
 
+    private void setStatus(int status){
+        this.status=status;
+    }
+
+
     private Observer<Boolean> fingerResultFlagObserver = flag ->{
         if (flag){
+            showResult();
             Log.e("Finger:","比对成功");
         }else {
+            binding.tvHint.setText("指纹核验失败，请重按手指");
             Log.e("Finger:","比对失败，请重按手指");
         }
     };
 
+    private void showResult(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        builder.setTitle("核验通过")
+                .setMessage("健康状态："+(status!=-1?getPersonStauts(status):getPersonStauts(person.getCodestatus())))
+                .setCancelable(false)
+                .setPositiveButton("确认", (dialog, which) -> {
+                    mListener.replaceFragment(HomeFragmet.getInstance());
+                    dialog.dismiss();
+                });
+        AlertDialog alert=builder.create();
+        alert.show();
+    }
+
+    private String getPersonStauts(int status){
+        String s="健康";
+        switch (status){
+            case 1:
+                s="亚健康";
+                break;
+            case 2:
+                s="不健康";
+                break;
+            default:
+                s="健康";
+                break;
+        }
+        return s;
+    }
 }

@@ -21,9 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BP990">
         <activity
-            android:name=".view.register.RegisterFragment"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -32,6 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CaptureFragmentActivity"
+            android:exported="false"/>
+        <activity android:name=".QRCodeActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

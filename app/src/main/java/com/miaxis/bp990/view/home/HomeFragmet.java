@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import com.miaxis.bp990.App.App;
 import com.miaxis.bp990.BR;
+import com.miaxis.bp990.BuildConfig;
+import com.miaxis.bp990.CaptureFragmentActivity;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
@@ -18,7 +20,6 @@ import com.miaxis.bp990.manager.ToastManager;
 import com.miaxis.bp990.util.IDCardUtils;
 import com.miaxis.bp990.view.card.CardFragment;
 import com.miaxis.bp990.view.face.FaceFragment;
-import com.miaxis.bp990.view.finger.FingerFragment;
 import com.miaxis.bp990.view.register.RegisterFragment;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -35,11 +36,11 @@ import io.reactivex.schedulers.Schedulers;
  * @updateAuthor
  * @updateDes
  */
-public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeViewModel> {
+public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeViewModel>{
 
     private static HomeFragmet instance;
     private OnFragmentInteractionListener mListener;
-
+    int count=0;
     public static HomeFragmet getInstance(){
         return new HomeFragmet();
     }
@@ -76,10 +77,17 @@ public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeV
         binding.inputSeach.setOnClickListener(v->{
             showDialog();
         });
-        binding.finger.setOnClickListener(v->{mListener.replaceFragment(FingerFragment.getInstance()); });
-        binding.add.setOnClickListener(v->{
-            mListener.replaceFragment(RegisterFragment.getInstance());
+        binding.scan.setOnClickListener(v->{
+            mListener.checkCamera(CaptureFragmentActivity.class,"扫码查询");
         });
+        binding.title.setOnClickListener(v->{
+            count++;
+            if(count==6){
+                mListener.replaceFragment(RegisterFragment.getInstance());
+                count=0;
+            }
+        });
+        binding.verson.setText("版本号："+ BuildConfig.VERSION_NAME);
     }
 
     @Override

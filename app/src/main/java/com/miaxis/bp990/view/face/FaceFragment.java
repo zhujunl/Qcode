@@ -1,5 +1,6 @@
 package com.miaxis.bp990.view.face;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.miaxis.bp990.BR;
+import com.miaxis.bp990.BuildConfig;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.RoundBorderView;
 import com.miaxis.bp990.RoundFrameLayout;
@@ -48,6 +50,7 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
     private final String TAG="FaceFragment";
     private Person person;
     private Bitmap facebit;
+    private int status=-1;
 
     public static FaceFragment getInstance(){
         return new FaceFragment();
@@ -61,6 +64,14 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
         return instance;
     }
 
+    public static FaceFragment getInstance(Person person,int satus){
+        if (instance==null){
+            instance=new FaceFragment();
+        }
+        instance.setPerson(person);
+        instance.setStatus(satus);
+        return instance;
+    }
 
 
     @Override
@@ -101,20 +112,30 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
 
     @Override
     protected void initView() {
-        viewModel.personlive.setValue(person);
+        viewModel.personFive.setValue(person);
         facebit=FileUtil.loadBitmap(person.getFacepath());
-        viewModel.personlive.observe(this, person -> {
+        viewModel.verifyFailedFlag.observe(this, aBoolean -> {
+            if(aBoolean){
+                viewModel.stopFaceVerify();
+                showResult();
+            }else {
+                binding.tvHint.setText("人脸核验未通过");
+            }
+        });
+        viewModel.personFive.observe(this, person -> {
             viewModel.startFaceVerify(facebit);
         });
         binding.title.setText(person.getName());
-        binding.ivHeader.setImageBitmap(facebit);
+        if(BuildConfig.DEBUG)binding.ivHeader.setImageBitmap(facebit);
         binding.rtvCamera.getViewTreeObserver().addOnGlobalLayoutListener(globalListener);
         binding.tvSwitch.setOnClickListener(v->{
             String path=viewModel.path.getValue();
             Bitmap bit=FileUtil.loadBitmap(path);
             binding.ivHeader.setImageBitmap(bit);
-            mListener.replaceFragment(FingerFragment.getInstance(viewModel.personlive.getValue()));
+            mListener.replaceFragment(FingerFragment.getInstance(viewModel.personFive.getValue()));
         });
+
+        binding.ivBack.setOnClickListener(v->onBackPressed());
     }
 
     @Override
@@ -136,6 +157,10 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
 
     private void setPerson(Person person){
         this.person=person;
+    }
+
+    private void setStatus(int status){
+        this.status=status;
     }
 
     private ViewTreeObserver.OnGlobalLayoutListener globalListener = new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -182,14 +207,39 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
         });
     };
 
-    private void showResult(String message){
+    private void showResult(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        builder.setTitle("核验通过")
+                .setMessage("健康状态："+(status!=-1?getPersonStauts(status):getPersonStauts(person.getCodestatus())))
+                .setCancelable(false)
+                .setPositiveButton("确认", (dialog, which) -> {
+                    mListener.replaceFragment(HomeFragmet.getInstance());
+                    dialog.dismiss();
+                });
+        AlertDialog alert=builder.create();
+        alert.show();
+    }
 
-    };
+    private String getPersonStauts(int status){
+        String s="健康";
+        switch (status){
+            case 1:
+                s="亚健康";
+                break;
+            case 2:
+                s="不健康";
+                break;
+            default:
+                s="健康";
+                break;
+        }
+        return s;
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFaceEvent(VerifyEvent event){
         Log.e(TAG,""+event.getMessage());
-        showResult(event.getMessage());
+        binding.tvHint.setText(event.getMessage());
     }
 
 

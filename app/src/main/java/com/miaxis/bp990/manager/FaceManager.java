@@ -11,12 +11,12 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.miaxis.bp990.util.ValueUtil;
 import com.miaxis.bp990.been.Intermediary;
 import com.miaxis.bp990.been.MxRGBImage;
 import com.miaxis.bp990.been.PhotoFaceFeature;
 import com.miaxis.bp990.event.DrawRectEvent;
 import com.miaxis.bp990.event.VerifyEvent;
+import com.miaxis.bp990.util.ValueUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.zz.api.MXFaceAPI;
@@ -92,7 +92,9 @@ public class FaceManager {
         asyncDetectThread.start();
         asyncDetectHandler = new Handler(asyncDetectThread.getLooper()) {
             public void handleMessage(Message msg) {
+                if (detectLoop) {
                     previewDataLoop();
+                }
             }
         };
         asyncExtractThread = new HandlerThread("extract_thread");

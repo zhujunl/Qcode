@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BP_990</string>
+    <string name="app_name">中正核验通</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -9,4 +9,10 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string-array name="data">
+        <item>健康</item>
+        <item>亚健康</item>
+        <item>不健康</item>
+    </string-array>
 </resources>

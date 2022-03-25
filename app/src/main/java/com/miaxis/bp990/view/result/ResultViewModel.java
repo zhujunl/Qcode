@@ -9,5 +9,5 @@ import com.miaxis.bp990.base.BaseViewModel;
  * @updateAuthor
  * @updateDes
  */
-class ResultViewModel extends BaseViewModel {
+public class ResultViewModel extends BaseViewModel {
 }

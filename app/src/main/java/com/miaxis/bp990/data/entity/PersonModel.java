@@ -15,6 +15,7 @@ import java.util.List;
 public class PersonModel   {
 
     public static void Save(Person person){
+        int result=AppDatabase.getInstance().persondao().DeleteByCard(person.getCardnum());
         AppDatabase.getInstance().persondao().insert(person);
     }
 

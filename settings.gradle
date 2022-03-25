@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "BP990"
 include ':app'
+//include ':zxing-lite'

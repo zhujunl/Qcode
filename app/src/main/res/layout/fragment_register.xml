@@ -360,15 +360,16 @@
                 app:layout_constraintEnd_toStartOf="@id/tv_heath"
                 app:layout_constraintStart_toEndOf="@id/tv_heath_hint"/>
 
-            <EditText
+            <Spinner
                 android:id="@+id/tv_heath"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:textColor="@color/darkgray"
                 android:textSize="14sp"
+                android:entries="@array/data"
                 android:background="@null"
-                android:hint="健康"
-                android:text="@={viewmodel.heath}"
+                android:spinnerMode="dropdown"
+                android:dropDownVerticalOffset="40sp"
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintWidth_percent="0.75"
                 app:layout_constraintStart_toStartOf="parent"

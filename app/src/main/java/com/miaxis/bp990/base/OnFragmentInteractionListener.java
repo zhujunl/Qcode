@@ -12,6 +12,6 @@ public interface OnFragmentInteractionListener {
     void dismissWaitDialog();
     void showResultDialog(String message);
     void dismissResultDialog();
-
     void exitApp();
+    void checkCamera(Class<?> cls,String title);
 }

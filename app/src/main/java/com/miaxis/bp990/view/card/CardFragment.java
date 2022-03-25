@@ -1,6 +1,8 @@
 package com.miaxis.bp990.view.card;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -135,23 +137,26 @@ public class CardFragment extends BaseViewModelFragment<FragmentCardBinding,Card
     };
 
     private Observer<Boolean> readCardFlagObserver = flag -> {
-        Disposable sub =Observable.create((ObservableOnSubscribe<Person>) p->{
+        ProgressDialog progressDialog=new ProgressDialog(getActivity());
+        progressDialog.setMessage("正在查询，请稍候");
+        progressDialog.show();
+        Disposable sub = Observable.create((ObservableOnSubscribe<Person>) p->{
             String cardnum=viewModel.getIdCardRecord().getCardNumber();
-            Person person=PersonManager.getInstance().FindPersonByCard(cardnum);
+            Person person= PersonManager.getInstance().FindPersonByCard(cardnum);
+            SystemClock.sleep(1000);
             p.onNext(person);
         } ).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(person -> {
+                    progressDialog.dismiss();
                     if (person!=null) {
                         mListener.replaceFragment(FaceFragment.getInstance(person));
                     }else {
-                        ToastManager.toast("暂无",ToastManager.ERROR);
+                        ToastManager.toast("查无此人",ToastManager.ERROR);
                     }
                 }, throwable -> {
-                    ToastManager.toast("暂无",ToastManager.ERROR);
+                    ToastManager.toast("查无此人",ToastManager.ERROR);
                 });
-
-
     };
 
     private Observer<Boolean> saveFlagObserver = flag -> mListener.backToStack(HomeFragmet.class);

@@ -29,4 +29,7 @@ public interface PersonDao  {
     @Query("select * from Person order by Person.id asc")
     List<Person> LoadPerson();
 
+    @Query("delete from Person where Person.cardnum = :card")
+    int DeleteByCard(String card);
+
 }

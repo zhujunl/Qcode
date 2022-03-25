@@ -32,7 +32,7 @@ public class FaceViewModel extends BaseViewModel {
 
     public ObservableField<String> hint = new ObservableField<>("");
     public MutableLiveData<Boolean> verifyFailedFlag = new SingleLiveEvent<>();
-    public MutableLiveData<Person> personlive=new MutableLiveData<>();
+    public MutableLiveData<Person> personFive=new MutableLiveData<>();
 
     public MutableLiveData<String> path=new MutableLiveData<>();
 

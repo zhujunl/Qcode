@@ -22,13 +22,13 @@ public class Person   {
    private String facepath;
    private String finger1;
    private String finger2;
-   private String codestatus;
+   private int codestatus;
 
    @Ignore
    public Person() {
    }
 
-   public Person(String name, String cardnum, String facepath, String finger1, String finger2, String codestatus) {
+   public Person(String name, String cardnum, String facepath, String finger1, String finger2, int codestatus) {
       this.name = name;
       this.cardnum = cardnum;
       this.facepath = facepath;
@@ -85,11 +85,11 @@ public class Person   {
       this.finger2 = finger2;
    }
 
-   public String getCodestatus() {
+   public int getCodestatus() {
       return codestatus;
    }
 
-   public void setCodestatus(String codestatus) {
+   public void setCodestatus(int codestatus) {
       this.codestatus = codestatus;
    }
 

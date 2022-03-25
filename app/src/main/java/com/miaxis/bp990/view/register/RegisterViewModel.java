@@ -1,6 +1,7 @@
 package com.miaxis.bp990.view.register;
 
 import android.graphics.Bitmap;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.miaxis.bp990.App.App;
@@ -35,7 +36,7 @@ public class RegisterViewModel extends BaseViewModel {
 
     public ObservableField<String> name = new ObservableField<>();
     public ObservableField<String> number = new ObservableField<>();
-    public ObservableField<String> heath = new ObservableField<>();
+    public ObservableField<Integer> heath = new ObservableField<>();
 
     public ObservableField<String> faceFeatureHint = new ObservableField<>("点击采集");
     public ObservableField<String> finger1FeatureHint = new ObservableField<>("点击采集");
@@ -70,6 +71,7 @@ public class RegisterViewModel extends BaseViewModel {
         Disposable subscribe = Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
             Person person=new Person(name.get(),number.get(),featureCache,fingerFeature1,fingerFeature2,heath.get());
             PersonManager.getInstance().Save(person);
+            SystemClock.sleep(1000);
             emitter.onNext(Boolean.TRUE);
         })
                 .subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
