@@ -1,24 +1,19 @@
 package com.miaxis.bp990.view.face;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.miaxis.bp990.App.App;
 import com.miaxis.bp990.base.BaseViewModel;
-import com.miaxis.bp990.been.IDCardRecord;
 import com.miaxis.bp990.been.PhotoFaceFeature;
 import com.miaxis.bp990.bridge.SingleLiveEvent;
 import com.miaxis.bp990.data.entity.Person;
-import com.miaxis.bp990.data.entity.PersonManager;
+import com.miaxis.bp990.exception.MyException;
 import com.miaxis.bp990.manager.CameraManager;
 import com.miaxis.bp990.manager.FaceManager;
-import com.miaxis.bp990.manager.ToastManager;
-import com.miaxis.bp990.util.FileUtil;
 import com.miaxis.bp990.util.ValueUtil;
 
-import java.io.File;
-
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -35,8 +30,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class FaceViewModel extends BaseViewModel {
 
-    public MutableLiveData<IDCardRecord> idCardRecordLiveData = new MutableLiveData<>();
-    public MutableLiveData<IDCardRecord> verifyFlag = new SingleLiveEvent<>();
+    public ObservableField<String> hint = new ObservableField<>("");
     public MutableLiveData<Boolean> verifyFailedFlag = new SingleLiveEvent<>();
     public MutableLiveData<Person> personlive=new MutableLiveData<>();
 
@@ -47,22 +41,31 @@ public class FaceViewModel extends BaseViewModel {
     public FaceViewModel() {
     }
 
-    public void startFaceVerify(String card,IDCardRecord idCardRecord) {
+    public void startFaceVerify(Bitmap face) {
         cardFeature=null;
+        hint.set("身份证证件照处理中");
         Disposable sub=Observable.create((ObservableOnSubscribe<PhotoFaceFeature>) p->{
-            Person person= PersonManager.getInstance().FindPersonByCard(card);
-            PhotoFaceFeature photoFaceFeature = FaceManager.getInstance().getCardFaceFeatureByBitmapPosting(idCardRecord.getCardBitmap());
+            PhotoFaceFeature photoFaceFeature = FaceManager.getInstance().getCardFaceFeatureByBitmapPosting(face);
             p.onNext(photoFaceFeature);
         }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoFaceFeature->{
+                    if(photoFaceFeature==null){
+                        hint.set("出现错误");
+                        return;
+                    }
                     cardFeature=photoFaceFeature;
                     FaceManager.getInstance().setFeatureListener(faceListener);
                     FaceManager.getInstance().setNeedNextFeature(true);
                     FaceManager.getInstance().setOrientation(CameraManager.getInstance().getPreviewOrientation());
                     FaceManager.getInstance().startLoop();
+                    hint.set("请将镜头朝向查询的人员");
                 },throwable -> {
-                    Log.e("FaceViewModel:",throwable.getMessage());
+                    if (throwable instanceof MyException) {
+                        hint.set(throwable.getMessage());
+                    } else {
+                        hint.set("出现错误");
+                    }
                 });
 
     }
@@ -80,34 +83,19 @@ public class FaceViewModel extends BaseViewModel {
                 } else {
                     score = FaceManager.getInstance().matchFeature(feature, cardFeature.getFaceFeature());
                 }
+                Log.e("faceListener:","mask="+mask+"-----------------score="+score);
                 int verify;
-
                 if (mask ? score >= ValueUtil.DEFAULT_MASK_VERIFY_SCORE : score >= ValueUtil.DEFAULT_VERIFY_SCORE) {
                     verify = 1;
-
-
                     verifyFailedFlag.postValue(Boolean.TRUE);
+                    hint.set("人证核验成功");
                 } else {
                     verify = 2;
                     Log.e("比对", "比对失败: "+score);
-
                     verifyFailedFlag.postValue(Boolean.FALSE);
+                    hint.set("识别不通过");
                 }
                 stopFaceVerify();
-                byte[] fileImage = FaceManager.getInstance().imageEncode(mxRGBImage.getRgbImage(), mxRGBImage.getWidth(), mxRGBImage.getHeight());
-                Bitmap header = BitmapFactory.decodeByteArray(fileImage, 0, fileImage.length);
-                IDCardRecord value = idCardRecordLiveData.getValue();
-                if (value != null) {
-//                    IDCardRepository.getInstance().addNewIDCard(value);
-//                    value.setFaceBitmap(header);
-//                    value.setVerifyTime(new Date());
-//                    value.setChekStatus(verify);
-//                    verifyFlag.postValue(value);
-//                    PostalManager.getInstance().saveImage(header,value,readCardNum);
-                    return;
-                } else {
-                    toast.postValue(ToastManager.getToastBody("遇到错误，请退出后重试", ToastManager.ERROR));
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -115,12 +103,6 @@ public class FaceViewModel extends BaseViewModel {
 
     };
 
-    public void SavePic(Person person,Bitmap data){
-        String path=FileUtil.PICTURE+ File.separator+System.currentTimeMillis()+".ss";
-        FileUtil.saveBitmapToJPEG(data,path);
-        person.setFacepath(path);
-        personlive.setValue(person);
-        this.path.setValue(path);
-    }
+
 
 }

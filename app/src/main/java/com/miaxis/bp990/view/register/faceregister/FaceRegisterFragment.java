@@ -1,11 +1,6 @@
-package com.miaxis.bp990.view.face;
+package com.miaxis.bp990.view.register.faceregister;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -17,56 +12,31 @@ import com.miaxis.bp990.RoundBorderView;
 import com.miaxis.bp990.RoundFrameLayout;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
-import com.miaxis.bp990.data.entity.Person;
-import com.miaxis.bp990.databinding.FragmentFaceBinding;
-import com.miaxis.bp990.event.VerifyEvent;
+import com.miaxis.bp990.bridge.Status;
+import com.miaxis.bp990.databinding.FragmentFaceRegisterBinding;
 import com.miaxis.bp990.manager.CameraManager;
-import com.miaxis.bp990.util.FileUtil;
-import com.miaxis.bp990.view.finger.FingerFragment;
-import com.miaxis.bp990.view.home.HomeFragmet;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
  * @author ZJL
- * @date 2022/3/24 17:48
+ * @date 2022/3/25 9:50
  * @des
  * @updateAuthor
  * @updateDes
  */
-public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, FaceViewModel> {
+public class FaceRegisterFragment extends BaseViewModelFragment<FragmentFaceRegisterBinding,FaceRegisterViewModel> {
 
-    private static FaceFragment instance;
+    private static FaceRegisterFragment instance;
     private OnFragmentInteractionListener mListener;
-    private RoundFrameLayout roundFrameLayout;
     private RoundBorderView roundBorderView;
-    private final String TAG="FaceFragment";
-    private Person person;
-    private Bitmap facebit;
+    private RoundFrameLayout roundFrameLayout;
 
-    public static FaceFragment getInstance(){
-        return new FaceFragment();
-    }
-
-    public static FaceFragment getInstance(Person person){
+    public static FaceRegisterFragment  getIntance(){
         if (instance==null){
-            instance=new FaceFragment();
+            instance=new FaceRegisterFragment();
         }
-        instance.setPerson(person);
         return instance;
-    }
-
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -81,12 +51,12 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
 
     @Override
     protected int setContentView() {
-        return R.layout.fragment_face;
+        return R.layout.fragment_face_register;
     }
 
     @Override
-    protected FaceViewModel initViewModel() {
-        return new ViewModelProvider(getActivity(),getViewModelProviderFactory()).get(FaceViewModel.class);
+    protected FaceRegisterViewModel initViewModel() {
+        return new ViewModelProvider(this,getViewModelProviderFactory()).get(FaceRegisterViewModel.class);
     }
 
     @Override
@@ -95,48 +65,33 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
     }
 
     @Override
-    protected void initData() {
-
-    }
-
-    @Override
     protected void initView() {
-        viewModel.personlive.setValue(person);
-        facebit=FileUtil.loadBitmap(person.getFacepath());
-        viewModel.personlive.observe(this, person -> {
-            viewModel.startFaceVerify(facebit);
-        });
-        binding.title.setText(person.getName());
-        binding.ivHeader.setImageBitmap(facebit);
+        viewModel.shootFlag.setValue(Status.FAILED);
+        binding.ivBack.setOnClickListener(v -> onBackPressed());
         binding.rtvCamera.getViewTreeObserver().addOnGlobalLayoutListener(globalListener);
-        binding.tvSwitch.setOnClickListener(v->{
-            String path=viewModel.path.getValue();
-            Bitmap bit=FileUtil.loadBitmap(path);
-            binding.ivHeader.setImageBitmap(bit);
-            mListener.replaceFragment(FingerFragment.getInstance(viewModel.personlive.getValue()));
+        binding.ivTakePhoto.setOnClickListener(v -> {
+            binding.ivTakePhoto.setVisibility(View.INVISIBLE);
+            viewModel.takePicture();
         });
+        binding.ivRetry.setOnClickListener(v -> {
+            binding.ivTakePhoto.setVisibility(View.VISIBLE);
+            viewModel.retry();
+        });
+        binding.ivConfirm.setOnClickListener(v -> viewModel.confirm());
+        viewModel.confirmFlag.observe(this, aBoolean -> mListener.backToStack(null));
     }
 
     @Override
-    public void onBackPressed() {
-        mListener.backToStack(HomeFragmet.class);
+    public void onBackPressed()  {
+        mListener.backToStack(null);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.stopFaceVerify();
+        CameraManager.getInstance().closeFrontCamera();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    private void setPerson(Person person){
-        this.person=person;
-    }
 
     private ViewTreeObserver.OnGlobalLayoutListener globalListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
@@ -148,7 +103,7 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
             binding.rtvCamera.setLayoutParams(layoutParams);
             binding.rtvCamera.turnRound();
             CameraManager.getInstance().resetRetryTime();
-            CameraManager.getInstance().openBackCamera(binding.rtvCamera, cameraListener);
+            CameraManager.getInstance().openFrontCamera(binding.rtvCamera, cameraListener);
         }
     };
 
@@ -174,23 +129,6 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
         roundBorderView = new RoundBorderView(getContext());
         ((FrameLayout) siblingView.getParent()).addView(roundBorderView, siblingView.getLayoutParams());
 
-        new Handler(Looper.getMainLooper()).post(() -> {
-            roundFrameLayout.setRadius(Math.min(roundFrameLayout.getWidth(), roundFrameLayout.getHeight()) / 2);
-            roundFrameLayout.turnRound();
-            roundBorderView.setRadius(Math.min(roundBorderView.getWidth(), roundBorderView.getHeight()) / 2);
-            roundBorderView.turnRound();
-        });
-    };
-
-    private void showResult(String message){
 
     };
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFaceEvent(VerifyEvent event){
-        Log.e(TAG,""+event.getMessage());
-        showResult(event.getMessage());
-    }
-
-
 }

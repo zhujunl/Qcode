@@ -1,24 +1,19 @@
 package com.miaxis.bp990.view.finger;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
 import com.miaxis.bp990.data.entity.Person;
 import com.miaxis.bp990.databinding.FragmentFingerBinding;
-import com.miaxis.bp990.event.FingerRegisterEvent;
 import com.miaxis.bp990.view.face.FaceFragment;
+import com.miaxis.bp990.view.home.HomeFragmet;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
@@ -33,6 +28,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
     private static FingerFragment instance;
     private OnFragmentInteractionListener mListener;
     private Person person;
+    private MaterialDialog retryDialog;
 
     public static FingerFragment getInstance(){
         if(instance==null){
@@ -49,11 +45,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         return instance;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -82,28 +74,29 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
 
     @Override
     protected void initView() {
-        viewModel.mark.setValue(1);
         viewModel.personlive.setValue(person);
         binding.tvSwitch.setOnClickListener(v->{mListener.replaceFragment(FaceFragment.getInstance());});
+        binding.title.setText(person.getName());
+        viewModel.fingerResultFlag.observe(this, fingerResultFlagObserver);
         viewModel.initFingerResult.observe(this, status -> {
             switch (status) {
                 case FAILED:
                     mListener.dismissWaitDialog();
                     Log.e("Fragment_Finger:","Failed");
-//                    retryDialog = new MaterialDialog.Builder(getContext())
-//                            .title("初始化指纹模块失败，是否重试？")
-//                            .positiveText("重试")
-//                            .onPositive((dialog, which) -> {
-//                                viewModel.initFingerDevice();
-//                                dialog.dismiss();
-//                            })
-//                            .negativeText("退出")
-//                            .onNegative((dialog, which) -> {
-//                                dialog.dismiss();
-//                                mListener.backToStack(HomeFragment.class);
-//                            })
-//                            .autoDismiss(false)
-//                            .show();
+                    retryDialog = new MaterialDialog.Builder(getContext())
+                            .title("初始化指纹模块失败，是否重试？")
+                            .positiveText("重试")
+                            .onPositive((dialog, which) -> {
+                                viewModel.initFingerDevice();
+                                dialog.dismiss();
+                            })
+                            .negativeText("退出")
+                            .onNegative((dialog, which) -> {
+                                dialog.dismiss();
+                                mListener.backToStack(HomeFragmet.class);
+                            })
+                            .autoDismiss(false)
+                            .show();
                     break;
                 case LOADING:
                     mListener.showWaitDialog("正在初始化指纹模块");
@@ -111,8 +104,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
                 case SUCCESS:
                     Log.e("Fragment_Finger:","SUCCESS");
                     mListener.dismissWaitDialog();
-//                    viewModel.verifyFinger();
-                    viewModel.registerFeature();
+                    viewModel.verifyFinger();
                     break;
             }
         });
@@ -120,14 +112,13 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
 
     @Override
     public void onBackPressed() {
-        mListener.backToStack(null);
+        mListener.backToStack(HomeFragmet.class);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        viewModel.initFingerDevice();
-        viewModel.RegFingerDevice();
+        viewModel.initFingerDevice();
     }
 
     @Override
@@ -140,26 +131,18 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.releaseFingerDevice();
-        EventBus.getDefault().unregister(this);
     }
 
     private void setPerson(Person person){
         this.person=person;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onFingerRegisterEvent(FingerRegisterEvent event) {
-        String feature = event.getFeature();
-        if (TextUtils.isEmpty(feature)) return;
-        if (event.getMark()==1) {
-            viewModel.mark.postValue(2);
-            viewModel.setFingerFeature1(feature);
-        } else if (event.getMark()==2){
-            viewModel.mark.postValue(3);
-            viewModel.setFingerFeature2(feature);
+    private Observer<Boolean> fingerResultFlagObserver = flag ->{
+        if (flag){
+            Log.e("Finger:","比对成功");
+        }else {
+            Log.e("Finger:","比对失败，请重按手指");
         }
-        Log.e("Finger:",viewModel.personlive.getValue().toString());
-        EventBus.getDefault().removeStickyEvent(event);
-    }
+    };
 
 }

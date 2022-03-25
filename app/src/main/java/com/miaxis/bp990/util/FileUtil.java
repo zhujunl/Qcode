@@ -31,7 +31,7 @@ import java.util.Objects;
 public class FileUtil {
 
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "miaxis";
-    public static final String MAIN_PATH = PATH + File.separator + "BP";
+    public static final String MAIN_PATH = PATH + File.separator + "BP990";
     public static final String APP_PATH = MAIN_PATH + File.separator + "APP";
     public static final String LICENCE_PATH = PATH + File.separator + "FaceId_ST" + File.separator + "st_lic.txt";
     public static final String FACE_IMAGE_PATH = MAIN_PATH + File.separator + "recordImage";

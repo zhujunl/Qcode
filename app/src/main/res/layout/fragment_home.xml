@@ -20,8 +20,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
-                android:id="@+id/face"
-                android:text="人脸"
+                android:id="@+id/input_seach"
+                android:text="无证查询"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button

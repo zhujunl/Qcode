@@ -2,19 +2,19 @@ package com.miaxis.bp990.event;
 
 public class FingerRegisterEvent {
 
-    private Integer mark;
+    private String mark;
     private String feature;
 
-    public FingerRegisterEvent(Integer mark, String feature) {
+    public FingerRegisterEvent(String mark, String feature) {
         this.mark = mark;
         this.feature = feature;
     }
 
-    public Integer getMark() {
+    public String getMark() {
         return mark;
     }
 
-    public void setMark(Integer mark) {
+    public void setMark(String mark) {
         this.mark = mark;
     }
 

@@ -212,8 +212,8 @@ public class CardManager {
 //    public boolean checkIsOutValidate(IDCardRecord idCardRecord) {
 //        try {
 //            SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-////            Date validEndDate = myFmt.parse(idCardRecord.getValidateEnd());
-////            return validEndDate.getTime() < System.currentTimeMillis();
+//            Date validEndDate = myFmt.parse(idCardRecord.getValidateEnd());
+//            return validEndDate.getTime() < System.currentTimeMillis();
 //        } catch (ParseException e) {
 //            return false;
 //        }

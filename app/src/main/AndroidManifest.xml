@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".App.App"
         android:allowBackup="true"
@@ -19,6 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BP990">
+        <activity
+            android:name=".view.register.RegisterFragment"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

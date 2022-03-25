@@ -90,13 +90,9 @@ public class FaceManager {
         asyncDetectThread = new HandlerThread("detect_thread");
         asyncDetectThread.setPriority(3);
         asyncDetectThread.start();
-        Log.e("FaceManager:","asyncDetectHandler"+"000");
         asyncDetectHandler = new Handler(asyncDetectThread.getLooper()) {
             public void handleMessage(Message msg) {
-                Log.e("FaceManager:","asyncDetectHandler"+"11111");
-                if (detectLoop) {Log.e("FaceManager:","asyncDetectHandler"+"222222");
                     previewDataLoop();
-                }Log.e("FaceManager:","asyncDetectHandler"+"33333");
             }
         };
         asyncExtractThread = new HandlerThread("extract_thread");
@@ -178,7 +174,6 @@ public class FaceManager {
 
     private void verify(byte[] detectData) {
         try {
-            Log.w("FaceManager:",""+detectData);
             String message = "";
             long time = System.currentTimeMillis();
             byte[] zoomedRgbData = cameraPreviewConvert(detectData, CameraManager.PRE_WIDTH, CameraManager.PRE_HEIGHT, orientation, ZOOM_WIDTH, ZOOM_HEIGHT);
@@ -212,7 +207,6 @@ public class FaceManager {
                     }
                     if (!TextUtils.isEmpty(message)) {
                         sendEvent(new VerifyEvent(message));
-                        return;
                     }
                     Intermediary intermediary = new Intermediary();
                     intermediary.width = ZOOM_WIDTH;
