@@ -123,4 +123,11 @@ public abstract class BaseBindingFragment<V extends ViewDataBinding> extends Fra
         }
     }
 
+    protected void showSuccessToast(String tips) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseBindingFragmentActivity) {
+            ((BaseBindingFragmentActivity<?>) activity).showSuccessToast(tips);
+        }
+    }
+
 }

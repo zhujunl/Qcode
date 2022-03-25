@@ -2,17 +2,26 @@ package com.miaxis.phone.ui.home;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.miaxis.common.activity.BaseBindingFragment;
 import com.miaxis.common.widget.ClickableLayout;
+import com.miaxis.phone.App;
 import com.miaxis.phone.BuildConfig;
 import com.miaxis.phone.R;
+import com.miaxis.phone.data.Model.PersonModel;
+import com.miaxis.phone.data.entity.MxPerson;
 import com.miaxis.phone.databinding.FragmentHomeBinding;
+import com.miaxis.phone.ui.ctid.FragmentCtid;
+import com.miaxis.phone.ui.health_code.FragmentHealthCode;
 import com.miaxis.phone.ui.input.FragmentInput;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
 
@@ -30,7 +39,7 @@ public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
 
     @Override
     protected void initView(@NonNull FragmentHomeBinding binding, @Nullable Bundle savedInstanceState) {
-        binding.layoutVersion.tvAppVersion.setText("版本号："+ BuildConfig.VERSION_NAME);
+        binding.layoutVersion.tvAppVersion.setText("版本号：" + BuildConfig.VERSION_NAME);
         binding.layoutTitle.setOnClickListener(new ClickableLayout.OnComboClickListener() {
             @Override
             protected int bindClickTimes() {
@@ -39,27 +48,45 @@ public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
 
             @Override
             protected void onComboClick(View v) {
-                Toast.makeText(getContext(), "重复点击", Toast.LENGTH_SHORT).show();
+                replaceParent(R.id.fl_root, FragmentInput.newInstance());
             }
         });
-        binding.btCtid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //replaceParent(R.id.fl_root, FragmentCtid.newInstance("哈哈哈哈","342921199911112222"));
-                replaceParent(R.id.fl_root, FragmentInput.newInstance(0));
-            }
+        binding.btCtid.setOnClickListener(v -> {
+            Disposable subscribe = Observable.create((ObservableOnSubscribe<MxPerson>) emitter -> {
+                MxPerson mxPerson = PersonModel.FindLast();
+                if (mxPerson == null) {
+                    throw new NullPointerException("Not found");
+                } else {
+                    emitter.onNext(mxPerson);
+                }
+            }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object -> {
+                        dismissLoading();
+                        replaceParent(R.id.fl_root, FragmentCtid.newInstance(object.name, object.cardNumber));
+                    }, throwable -> {
+                        dismissLoading();
+                        showErrorToast("请先注册");
+                    });
         });
-        binding.btHealthCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //replaceParent(R.id.fl_root, FragmentHealthCode.newInstance("哈哈哈哈","342921199911112222",0));
-                replaceParent(R.id.fl_root, FragmentInput.newInstance(1));
-            }
+        binding.btHealthCode.setOnClickListener(v -> {
+            Disposable subscribe = Observable.create((ObservableOnSubscribe<MxPerson>) emitter -> {
+                MxPerson mxPerson = PersonModel.FindLast();
+                if (mxPerson == null) {
+                    throw new NullPointerException("Not found");
+                } else {
+                    emitter.onNext(mxPerson);
+                }
+            }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object -> {
+                        dismissLoading();
+                        replaceParent(R.id.fl_root, FragmentHealthCode.newInstance(object.name, object.cardNumber, object.codeStatus));
+                    }, throwable -> {
+                        dismissLoading();
+                        showErrorToast("请先注册");
+                    });
         });
-
     }
-
-
-
 
 }

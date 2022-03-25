@@ -31,4 +31,7 @@ public interface MxPersonDao {
     @Query("select * from MxPerson where MxPerson.name = :name and MxPerson.cardNumber= :cardNum limit 1")
     List<MxPerson> findPersonByNameAndIdCard(String name, String cardNum);
 
+    @Query("select * from MxPerson order by MxPerson.id desc limit 1")
+    List<MxPerson> findLast();
+
 }

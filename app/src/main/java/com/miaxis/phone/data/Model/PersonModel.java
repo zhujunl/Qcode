@@ -1,5 +1,6 @@
 package com.miaxis.phone.data.Model;
 
+import com.miaxis.common.utils.ListUtils;
 import com.miaxis.phone.data.db.AppDataBase;
 import com.miaxis.phone.data.entity.MxPerson;
 
@@ -28,6 +29,11 @@ public class PersonModel {
 
     public static List<MxPerson> findPersonByNameAndIdCard(String name, String idCardNumber){
         return AppDataBase.getInstance().getMxPersonDao().findPersonByNameAndIdCard(name,idCardNumber);
+    }
+
+    public static MxPerson FindLast(){
+        List<MxPerson> last = AppDataBase.getInstance().getMxPersonDao().findLast();
+        return ListUtils.isNullOrEmpty(last)?null:last.get(0);
     }
 
 }

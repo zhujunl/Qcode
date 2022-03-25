@@ -2,6 +2,8 @@ package com.miaxis.phone;
 
 import android.app.Application;
 
+import com.miaxis.phone.data.db.AppDataBase;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,6 +22,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app=this;
+        AppDataBase.getInstance().init("data.db",this);
     }
 
     public static App getInstance(){
