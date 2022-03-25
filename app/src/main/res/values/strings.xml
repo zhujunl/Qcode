@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">中正赋码端</string>
+    <string name="app_name">中正赋码通</string>
     <string name="app_copyright">©浙江中正智能科技有限公司</string>
     <string name="app_title">标题</string>
     <string name="string_green_code">绿码：凭此码可在浙江省范围内通行，请主动出示，配合检查；并做好自身防护工作，码颜色将根据您的申报由当地政府按照相关政策动态更新，出行前请仔细检查您的健康码。</string>
     <string name="app_tips1">依托全国一体化政务服务平台\n开展跨省（区、市）数据共享和互通互认</string>
     <string name="app_tips2">服务热线：0571–12345-6\n本服务由杭州市人民政府提供</string>
+    <string name="tips_camera">当前App需要申请读写文件和调用相机权限才能运行</string>
+    <string name="tips_limit">权限申请</string>
+    <string name="tips_limit_true">确认</string>
+    <string name="tips_limit_false">取消</string>
+    <string name="tips_limit_camera">当前App需要申请读写文件和调用相机权限,需要打开设置页面么?</string>
 </resources>

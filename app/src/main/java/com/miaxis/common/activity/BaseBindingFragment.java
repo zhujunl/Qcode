@@ -60,12 +60,15 @@ public abstract class BaseBindingFragment<V extends ViewDataBinding> extends Fra
         if (binding != null) {
             binding.unbind();
         }
+        hideInputMethod();
+    }
+
+    protected void hideInputMethod(){
         Activity activity = getActivity();
         if (activity instanceof BaseBindingActivity) {
             BaseBindingActivity<?> baseBindingActivity = (BaseBindingActivity<?>) activity;
             baseBindingActivity.hideInputMethod();
         }
-
     }
 
     protected void finish() {
@@ -111,6 +114,13 @@ public abstract class BaseBindingFragment<V extends ViewDataBinding> extends Fra
 
     protected void replaceChild(@IdRes int containerViewId, Fragment fragment) {
         getChildFragmentManager().beginTransaction().replace(containerViewId, fragment).commit();
+    }
+
+    protected void showErrorToast(String tips) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseBindingFragmentActivity) {
+            ((BaseBindingFragmentActivity<?>) activity).showErrorToast(tips);
+        }
     }
 
 }

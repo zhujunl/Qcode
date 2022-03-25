@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.miaxis.common.activity.BaseBindingFragmentActivity;
 import com.miaxis.phone.databinding.ActivityMainBinding;
-import com.miaxis.phone.ui.health_code.FragmentHealthCode;
+import com.miaxis.phone.ui.home.FragmentHome;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +19,9 @@ public class MainActivity extends BaseBindingFragmentActivity<ActivityMainBindin
     @Override
     protected void initView(@NonNull ActivityMainBinding binding, @Nullable Bundle savedInstanceState) {
 
+        replace(R.id.fl_root, FragmentHome.newInstance());
 
-
-
-
-        replace(R.id.fl_root, FragmentHealthCode.newInstance("哈哈哈哈","342921199911112222",0));
+        //replace(R.id.fl_root, FragmentHealthCode.newInstance("哈哈哈哈","342921199911112222",0));
     }
 
 }

@@ -31,6 +31,7 @@ public abstract class BaseBindingFragmentActivity<V extends ViewDataBinding> ext
 //        }
         getSupportFragmentManager().beginTransaction()
                 .replace(containerViewId, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 

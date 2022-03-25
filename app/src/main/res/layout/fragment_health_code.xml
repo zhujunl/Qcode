@@ -17,177 +17,186 @@
             android:id="@+id/layout_title"
             layout="@layout/layout_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="50dp" />
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <View
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="#00B05B"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent">
 
-            <View
-                android:id="@+id/v_bg"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/layer_bg_health_code"
-                app:layout_constraintBottom_toBottomOf="@id/tv_status_message"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#00B05B"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.miaxis.common.widget.DateView
-                android:id="@+id/dv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:textColor="@color/black"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toTopOf="@id/v_bg"
-                app:time_format="date"
-                tools:text="3月24日" />
+                <View
+                    android:id="@+id/v_bg"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/layer_bg_health_code"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_status_message"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.miaxis.common.widget.TimeView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="45sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/dv_date"
-                tools:text="22:22:22" />
+                <com.miaxis.common.widget.DateView
+                    android:id="@+id/dv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toTopOf="@id/v_bg"
+                    app:time_format="date"
+                    tools:text="3月24日" />
 
-            <View
-                android:id="@+id/v_line"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="#FFF4F4F4"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/tv_time" />
+                <com.miaxis.common.widget.TimeView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/dv_date"
+                    tools:text="22:22:22" />
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@id/v_line"
-                app:layout_constraintTop_toBottomOf="@id/v_line"
-                tools:text="姓名" />
+                <View
+                    android:id="@+id/v_line"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="#FFF4F4F4"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/tv_time" />
 
-            <TextView
-                android:id="@+id/tv_hide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="隐藏"
-                android:textColor="#FF2074BD"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_name"
-                app:layout_constraintLeft_toRightOf="@id/tv_name"
-                app:layout_constraintTop_toTopOf="@+id/tv_name" />
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/v_line"
+                    app:layout_constraintTop_toBottomOf="@id/v_line"
+                    tools:text="姓名" />
 
-            <TextView
-                android:id="@+id/tv_title2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="杭州健康码"
-                android:textColor="#333333"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/tv_name" />
+                <TextView
+                    android:id="@+id/tv_hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="隐藏"
+                    android:textColor="#FF2074BD"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_name"
+                    app:layout_constraintLeft_toRightOf="@id/tv_name"
+                    app:layout_constraintTop_toTopOf="@+id/tv_name" />
 
-
-            <ImageView
-                android:layout_marginTop="10dp"
-                android:id="@+id/iv_qr"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:background="@drawable/shape_bg_qr"
-                android:padding="5dp"
-                android:src="@mipmap/ic_launcher"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/tv_title2"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/tv_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FF2FA664"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/iv_qr"
-                tools:text="绿码" />
-
-            <TextView
-                android:id="@+id/tv_status_message"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:paddingBottom="30dp"
-                android:textColor="#333333"
-                android:textSize="16sp"
-                app:layout_constraintLeft_toLeftOf="@id/v_bg"
-                app:layout_constraintRight_toRightOf="@id/v_bg"
-                app:layout_constraintTop_toBottomOf="@id/tv_status"
-                tools:text="@string/string_green_code" />
+                <TextView
+                    android:id="@+id/tv_title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="杭州健康码"
+                    android:textColor="#333333"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
 
-            <TextView
-                android:id="@+id/tv_tips1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:text="@string/app_tips1"
-                android:textColor="#333333"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_tips2"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                <ImageView
+                    android:id="@+id/iv_qr"
+                    android:layout_width="240dp"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/shape_bg_qr"
+                    android:padding="5dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:visibility="invisible"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title2"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/tv_tips2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:text="@string/app_tips2"
-                android:textColor="#555555"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#FF2FA664"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/iv_qr"
+                    tools:text="绿码" />
+
+                <TextView
+                    android:id="@+id/tv_status_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:paddingBottom="20dp"
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    app:layout_constraintLeft_toLeftOf="@id/v_bg"
+                    app:layout_constraintRight_toRightOf="@id/v_bg"
+                    app:layout_constraintTop_toBottomOf="@id/tv_status"
+                    tools:text="@string/string_green_code" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_tips1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/app_tips1"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/v_bg" />
+
+                <TextView
+                    android:id="@+id/tv_tips2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="@string/app_tips2"
+                    android:textColor="#555555"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_tips1" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

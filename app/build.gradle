@@ -10,7 +10,7 @@ android {
         minSdk 21
         targetSdk 31
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -42,12 +42,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
             buildConfigField 'boolean', 'IS_DEBUG', 'true'
+            buildConfigField 'int', 'TIMEOUT', '5'
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
+            buildConfigField 'int', 'TIMEOUT', '60'
         }
     }
     compileOptions {
@@ -85,6 +87,12 @@ dependencies {
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+
+    //Toast
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
+
+    implementation 'pub.devrel:easypermissions:3.0.0'
+
 
     //Room
     def room_version = "2.2.6"

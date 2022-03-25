@@ -7,12 +7,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
+
+import com.miaxis.common.runnable.SingleRunnable;
+import com.miaxis.phone.App;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+import es.dmoral.toasty.Toasty;
 
 /**
  * @author Tank
@@ -57,13 +62,13 @@ public abstract class BaseBindingActivity<V extends ViewDataBinding> extends App
         return super.onTouchEvent(event);
     }
 
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            hideNavigationBar();
-//        }
-//    }
+    //    @Override
+    //    public void onWindowFocusChanged(boolean hasFocus) {
+    //        super.onWindowFocusChanged(hasFocus);
+    //        if (hasFocus) {
+    //            hideNavigationBar();
+    //        }
+    //    }
 
     public void hideNavigationBar() {
         final View decorView = getWindow().getDecorView();
@@ -90,14 +95,11 @@ public abstract class BaseBindingActivity<V extends ViewDataBinding> extends App
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
-        //        List<Fragment> list = getSupportFragmentManager().getFragments();
-        //        if (!list.isEmpty()) {
-        //            getSupportFragmentManager().popBackStack();
-        //        }else {
-        //
-        //        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -141,6 +143,33 @@ public abstract class BaseBindingActivity<V extends ViewDataBinding> extends App
         runOnUiThread(() -> {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
+            }
+        });
+    }
+
+    public void showToast(String tips) {
+        runOnUiThread(new SingleRunnable<String>(tips) {
+            @Override
+            public void onRun(String data) {
+                Toasty.info(App.getInstance(), String.valueOf(data), Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    public void showSuccessToast(String tips) {
+        runOnUiThread(new SingleRunnable<String>(tips) {
+            @Override
+            public void onRun(String data) {
+                Toasty.success(App.getInstance(), String.valueOf(data), Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    public void showErrorToast(String tips) {
+        runOnUiThread(new SingleRunnable<String>(tips) {
+            @Override
+            public void onRun(String data) {
+                Toasty.error(App.getInstance(), String.valueOf(data), Toast.LENGTH_SHORT, true).show();
             }
         });
     }
