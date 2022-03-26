@@ -2,18 +2,15 @@ package com.miaxis.bp990.view.card;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.SystemClock;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.miaxis.bp990.App.App;
 import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
+import com.miaxis.bp990.been.ResultSearch;
 import com.miaxis.bp990.bridge.Status;
-import com.miaxis.bp990.data.entity.Person;
-import com.miaxis.bp990.data.entity.PersonManager;
 import com.miaxis.bp990.databinding.FragmentCardBinding;
 import com.miaxis.bp990.manager.ToastManager;
 import com.miaxis.bp990.view.face.FaceFragment;
@@ -21,11 +18,6 @@ import com.miaxis.bp990.view.home.HomeFragmet;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author ZJL
@@ -39,6 +31,7 @@ public class CardFragment extends BaseViewModelFragment<FragmentCardBinding,Card
     private static CardFragment instance;
     private OnFragmentInteractionListener mListener;
     private MaterialDialog retryDialog;
+    private ProgressDialog progressDialog;
 
     public static CardFragment getInstance(){
         if(instance==null){
@@ -51,6 +44,7 @@ public class CardFragment extends BaseViewModelFragment<FragmentCardBinding,Card
     public void onAttach(Context context) {
         super.onAttach(context);
         if(context instanceof OnFragmentInteractionListener){
+            progressDialog=new ProgressDialog(context);
             mListener=(OnFragmentInteractionListener) context;
         }else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
@@ -75,7 +69,7 @@ public class CardFragment extends BaseViewModelFragment<FragmentCardBinding,Card
     @Override
     protected void initData() {
         viewModel.initCardResult.observe(this, initCardResultObserver);
-        viewModel.readCardFlag.observe(this, readCardFlagObserver);
+        viewModel.result.observe(this, readCardFlagObserver);
         viewModel.saveFlag.observe(this, saveFlagObserver);
     }
 
@@ -136,27 +130,22 @@ public class CardFragment extends BaseViewModelFragment<FragmentCardBinding,Card
         }
     };
 
-    private Observer<Boolean> readCardFlagObserver = flag -> {
-        ProgressDialog progressDialog=new ProgressDialog(getActivity());
-        progressDialog.setMessage("正在查询，请稍候");
-        progressDialog.show();
-        Disposable sub = Observable.create((ObservableOnSubscribe<Person>) p->{
-            String cardnum=viewModel.getIdCardRecord().getCardNumber();
-            Person person= PersonManager.getInstance().FindPersonByCard(cardnum);
-            SystemClock.sleep(1000);
-            p.onNext(person);
-        } ).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(person -> {
-                    progressDialog.dismiss();
-                    if (person!=null) {
-                        mListener.replaceFragment(FaceFragment.getInstance(person));
-                    }else {
-                        ToastManager.toast("查无此人",ToastManager.ERROR);
-                    }
-                }, throwable -> {
-                    ToastManager.toast("查无此人",ToastManager.ERROR);
-                });
+
+    private final Observer<ResultSearch> readCardFlagObserver = result -> {
+        if(result.getCode()==Status.LOADING){
+            progressDialog.setMessage(result.getMessage());
+            progressDialog.show();
+        }else if (result.getCode()==Status.SUCCESS){
+            progressDialog.dismiss();
+            if(result.getPerson()==null){
+                ToastManager.toast("查无此人",ToastManager.ERROR);
+            }else {
+                mListener.replaceFragment(FaceFragment.getInstance(result.getPerson()));
+            }
+        }else {
+            progressDialog.dismiss();
+            ToastManager.toast(result.getMessage(),ToastManager.ERROR);
+        }
     };
 
     private Observer<Boolean> saveFlagObserver = flag -> mListener.backToStack(HomeFragmet.class);

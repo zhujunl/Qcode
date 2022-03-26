@@ -3,7 +3,6 @@ package com.miaxis.bp990;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Base64;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -14,8 +13,7 @@ import com.miaxis.bp990.base.BaseActivity;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
 import com.miaxis.bp990.been.Code;
-import com.miaxis.bp990.data.entity.Person;
-import com.miaxis.bp990.data.entity.PersonManager;
+import com.miaxis.bp990.bridge.Status;
 import com.miaxis.bp990.databinding.ActivityMainBinding;
 import com.miaxis.bp990.manager.ToastManager;
 import com.miaxis.bp990.view.face.FaceFragment;
@@ -26,11 +24,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import androidx.lifecycle.ViewModelProvider;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -40,6 +34,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     private MaterialDialog resultDialog;
     private MaterialDialog quitDialog;
     private String root;
+    private MainViewModel viewModel;
 
 
     @Override
@@ -60,10 +55,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
 
     @Override
     protected void initView() {
-        initDialog();
-        binding.sacn.setOnClickListener(v->{
-            checkCameraPermissions(QRCodeActivity.class,"扫码");
+        viewModel=new ViewModelProvider(this,getDefaultViewModelProviderFactory()).get(MainViewModel.class);
+        viewModel.result.observe(this, result -> {
+            dismissWaitDialog();
+            if(result.getCode()== Status.SUCCESS){
+                if(result.getPerson()==null){
+                    ToastManager.toast("查无此人",ToastManager.ERROR);
+                }else {
+                    replaceFragment(FaceFragment.getInstance(result.getPerson()));
+                }
+            }else {
+                ToastManager.toast(result.getMessage(),ToastManager.ERROR);
+            }
         });
+        initDialog();
     }
 
     @Override
@@ -213,23 +218,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
                         String result = CameraScan.parseScanResult(data);
                         byte[] bytes= Base64.decode(result,Base64.DEFAULT);
                         Code code = new Gson().fromJson(new String(bytes),Code.class);
-                        Disposable sub=Observable.create((ObservableOnSubscribe<Person>) p->{
-                            Person penson=PersonManager.getInstance().FindPersonByCard(code.cardNumber);
-                            penson.setName(code.name);
-                            SystemClock.sleep(1000);
-                            p.onNext(penson);
-                        } ).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(person -> {
-                                    dismissWaitDialog();
-                                    if (person!=null) {
-                                        replaceFragment(FaceFragment.getInstance(person,code.codeStatus));
-                                    }else {
-                                        ToastManager.toast("暂无",ToastManager.ERROR);
-                                    }
-                                }, throwable -> {
-                                    ToastManager.toast("暂无",ToastManager.ERROR);
-                                });
+                        viewModel.searchPerson(code);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

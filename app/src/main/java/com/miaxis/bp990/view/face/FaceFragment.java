@@ -64,15 +64,6 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
         return instance;
     }
 
-    public static FaceFragment getInstance(Person person,int satus){
-        if (instance==null){
-            instance=new FaceFragment();
-        }
-        instance.setPerson(person);
-        instance.setStatus(satus);
-        return instance;
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -210,7 +201,7 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
     private void showResult(){
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle("核验通过")
-                .setMessage("健康状态："+(status!=-1?getPersonStauts(status):getPersonStauts(person.getCodestatus())))
+                .setMessage("健康状态："+getPersonStauts(person.getCodestatus()))
                 .setCancelable(false)
                 .setPositiveButton("确认", (dialog, which) -> {
                     mListener.replaceFragment(HomeFragmet.getInstance());

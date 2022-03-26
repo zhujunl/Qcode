@@ -15,6 +15,7 @@
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/ic_take_photo_white.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/progress_small_holo.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/rounded_button_main_color.xml" value="0.3697916666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/zxl_flashlight_selector.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/activity_main.xml" value="0.10833333333333334" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/activity_register.xml" value="0.3536458333333333" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/dialog_picture.xml" value="0.3536458333333333" />
@@ -31,6 +32,7 @@
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/qr_code_activity.xml" value="0.1265625" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/toolbar_capture.xml" value="0.109375" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/top_title_back_bar.xml" value="0.20104166666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/zxl_capture.xml" value="0.3536458333333333" />
         <entry key="..\:/AndroidProject/demo/app/src/main/res/layout/activity_main.xml" value="0.3482051282051282" />
       </map>
     </option>

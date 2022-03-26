@@ -85,7 +85,6 @@ public class FingerViewModel extends BaseViewModel {
                         e.printStackTrace();
                     }
                     if (result) {
-
                         hint.set("比对成功");
                         fingerResultFlag.postValue(Boolean.TRUE);
                         return;

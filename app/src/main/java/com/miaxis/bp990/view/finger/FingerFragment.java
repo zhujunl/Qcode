@@ -2,7 +2,9 @@ package com.miaxis.bp990.view.finger;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.miaxis.bp990.BR;
@@ -13,6 +15,8 @@ import com.miaxis.bp990.data.entity.Person;
 import com.miaxis.bp990.databinding.FragmentFingerBinding;
 import com.miaxis.bp990.view.face.FaceFragment;
 import com.miaxis.bp990.view.home.HomeFragmet;
+
+import java.lang.reflect.Field;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -46,16 +50,6 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         instance.setPerson(person);
         return instance;
     }
-
-    public static FingerFragment getInstance(Person person,int status){
-        if (instance==null){
-            instance=new FingerFragment();
-        }
-        instance.setPerson(person);
-        instance.setStatus(status);
-        return instance;
-    }
-
 
 
 
@@ -168,7 +162,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
     private void showResult(){
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle("核验通过")
-                .setMessage("健康状态："+(status!=-1?getPersonStauts(status):getPersonStauts(person.getCodestatus())))
+                .setMessage("健康状态："+getPersonStauts(person.getCodestatus()))
                 .setCancelable(false)
                 .setPositiveButton("确认", (dialog, which) -> {
                     mListener.replaceFragment(HomeFragmet.getInstance());
@@ -176,6 +170,25 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
                 });
         AlertDialog alert=builder.create();
         alert.show();
+        try {
+            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+            mAlert.setAccessible(true);
+            Object mAlertController = mAlert.get(alert);
+            Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
+            mMessage.setAccessible(true);
+            TextView mMessageView = (TextView) mMessage.get(mAlertController);
+            if (person.getCodestatus()==0){
+                mMessageView.setTextColor(Color.GREEN);
+            }else if(person.getCodestatus()==1){
+                mMessageView.setTextColor(Color.YELLOW);
+            }else {
+                mMessageView.setTextColor(Color.RED);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getPersonStauts(int status){

@@ -89,13 +89,13 @@ public class FaceViewModel extends BaseViewModel {
                     verify = 1;
                     verifyFailedFlag.postValue(Boolean.TRUE);
                     hint.set("人证核验成功");
+                    stopFaceVerify();
                 } else {
                     verify = 2;
                     Log.e("比对", "比对失败: "+score);
                     verifyFailedFlag.postValue(Boolean.FALSE);
                     hint.set("识别不通过");
                 }
-                stopFaceVerify();
             } catch (Exception e) {
                 e.printStackTrace();
             }
