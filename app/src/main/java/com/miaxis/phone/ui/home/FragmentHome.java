@@ -1,6 +1,7 @@
 package com.miaxis.phone.ui.home;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.miaxis.common.activity.BaseBindingFragment;
@@ -14,6 +15,8 @@ import com.miaxis.phone.databinding.FragmentHomeBinding;
 import com.miaxis.phone.ui.ctid.FragmentCtid;
 import com.miaxis.phone.ui.health_code.FragmentHealthCode;
 import com.miaxis.phone.ui.input.FragmentInput;
+
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,11 +55,13 @@ public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
             }
         });
         binding.btCtid.setOnClickListener(v -> {
+            showLoading();
             Disposable subscribe = Observable.create((ObservableOnSubscribe<MxPerson>) emitter -> {
                 MxPerson mxPerson = PersonModel.FindLast();
                 if (mxPerson == null) {
                     throw new NullPointerException("Not found");
                 } else {
+                    sleep();
                     emitter.onNext(mxPerson);
                 }
             }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
@@ -70,18 +75,21 @@ public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
                     });
         });
         binding.btHealthCode.setOnClickListener(v -> {
+            showLoading();
             Disposable subscribe = Observable.create((ObservableOnSubscribe<MxPerson>) emitter -> {
                 MxPerson mxPerson = PersonModel.FindLast();
                 if (mxPerson == null) {
                     throw new NullPointerException("Not found");
                 } else {
+                    sleep();
                     emitter.onNext(mxPerson);
                 }
             }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object -> {
                         dismissLoading();
-                        replaceParent(R.id.fl_root, FragmentHealthCode.newInstance(object.name, object.cardNumber, object.codeStatus));
+                        replaceParent(R.id.fl_root, FragmentHealthCode.newInstance(object.name,
+                                object.cardNumber, object.codeStatus));
                     }, throwable -> {
                         dismissLoading();
                         showErrorToast("请先注册");
@@ -89,4 +97,7 @@ public class FragmentHome extends BaseBindingFragment<FragmentHomeBinding> {
         });
     }
 
+    private void sleep(){
+        SystemClock.sleep( 1000L + new Random().nextInt(3) * 1000L);
+    }
 }

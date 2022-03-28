@@ -123,7 +123,7 @@ public abstract class BaseBindingActivity<V extends ViewDataBinding> extends App
             if (progressDialog == null) {
                 progressDialog = new ProgressDialog(BaseBindingActivity.this);
             }
-            progressDialog.setTitle("Loading .. ");
+            progressDialog.setTitle("请稍候... ");
             progressDialog.show();
         });
     }
