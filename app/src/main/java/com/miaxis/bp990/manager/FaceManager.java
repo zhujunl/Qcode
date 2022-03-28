@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.miaxis.bp990.been.Intermediary;
@@ -194,22 +193,22 @@ public class FaceManager {
                     message = "提取特征失败";
                     sendEvent(new VerifyEvent(message));
                 } else {
-                    if (Math.abs(mxFaceInfoEx.pitch) > 20 || Math.abs(mxFaceInfoEx.yaw) > 20 || Math.abs(mxFaceInfoEx.roll) > 20) {
-                        message = "请正对摄像头";
-                    } else if (mxFaceInfoEx.illumination < 50) {
-                        message = "脸部过暗";
-                    } else if (mxFaceInfoEx.illumination > 200) {
-                        message = "脸部过亮";
-                    } else if (mxFaceInfoEx.blur > 30) {
-                        message = "图像模糊";
-                    } else if (mxFaceInfoEx.eyeDistance < 30) {
-                        message = "请靠近摄像头";
-                    } else if (mxFaceInfoEx.quality < ValueUtil.DEFAULT_QUALITY_SCORE) {
-                        message = "人脸质量过低";
-                    }
-                    if (!TextUtils.isEmpty(message)) {
-                        sendEvent(new VerifyEvent(message));
-                    }
+//                    if (Math.abs(mxFaceInfoEx.pitch) > 20 || Math.abs(mxFaceInfoEx.yaw) > 20 || Math.abs(mxFaceInfoEx.roll) > 20) {
+//                        message = "请正对摄像头";
+//                    } else if (mxFaceInfoEx.illumination < 50) {
+//                        message = "脸部过暗";
+//                    } else if (mxFaceInfoEx.illumination > 200) {
+//                        message = "脸部过亮";
+//                    } else if (mxFaceInfoEx.blur > 30) {
+//                        message = "图像模糊";
+//                    } else if (mxFaceInfoEx.eyeDistance < 30) {
+//                        message = "请靠近摄像头";
+//                    } else if (mxFaceInfoEx.quality < ValueUtil.DEFAULT_QUALITY_SCORE) {
+//                        message = "人脸质量过低";
+//                    }
+//                    if (!TextUtils.isEmpty(message)) {
+//                        sendEvent(new VerifyEvent(message));
+//                    }
                     Intermediary intermediary = new Intermediary();
                     intermediary.width = ZOOM_WIDTH;
                     intermediary.height = ZOOM_HEIGHT;
@@ -413,7 +412,7 @@ public class FaceManager {
                 result = faceQuality(rgbData, bitmap.getWidth(), bitmap.getHeight(), pFaceNum[0], pFaceBuffer);
                 MXFaceInfoEx mxFaceInfoEx = sortMXFaceInfoEx(pFaceBuffer);
 //                if (result && mxFaceInfoEx.quality > ConfigManager.getInstance().getConfig().getRegisterQualityScore()) {
-                if (result && mxFaceInfoEx.quality > ValueUtil.DEFAULT_REGISTER_QUALITY_SCORE) {
+//                if (result && mxFaceInfoEx.quality > ValueUtil.DEFAULT_REGISTER_QUALITY_SCORE) {
                     byte[] faceFeature = extractFeature(rgbData, bitmap.getWidth(), bitmap.getHeight(), mxFaceInfoEx);
                     if (faceFeature != null) {
                         byte[] maskFaceFeature = extractMaskFeatureForRegister(rgbData, bitmap.getWidth(), bitmap.getHeight(), mxFaceInfoEx);
@@ -423,9 +422,9 @@ public class FaceManager {
                     } else {
                         message = "提取特征失败";
                     }
-                } else {
-                    message = "人脸质量过低";
-                }
+//                } else {
+//                    message = "人脸质量过低";
+//                }
             } else {
                 message = "检测到多张人脸";
             }

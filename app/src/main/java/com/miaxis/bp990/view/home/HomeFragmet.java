@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.miaxis.bp990.BR;
 import com.miaxis.bp990.BuildConfig;
@@ -81,9 +84,12 @@ public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeV
             showDialog();
         });
         binding.scan.setOnClickListener(v->{
-            mListener.checkCamera(CaptureFragmentActivity.class,"扫码查询");
+            mListener.checkCamera(CaptureFragmentActivity.class,"网证查询",1);
         });
-        if(BuildConfig.DEBUG) binding.title.setOnClickListener(v->{
+        binding.hScan.setOnClickListener(v->{
+            mListener.checkCamera(CaptureFragmentActivity.class,"健康码查询",2);
+        });
+        binding.title.setOnClickListener(v->{
             count++;
             if(count==6){
                 mListener.replaceFragment(RegisterFragment.getInstance());
@@ -100,23 +106,26 @@ public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeV
 
     private void showDialog(){
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.dialog_login,null);
+        EditText name=view.findViewById(R.id.name_et);
+        EditText num=view.findViewById(R.id.code_et);
+        TextView cancle=view.findViewById(R.id.dia_cancle);
+        TextView sure=view.findViewById(R.id.dia_sure);
         EditText editText=new EditText(getActivity());
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setTitle("请输入身份证号码")
                 .setCancelable(true)
-                .setView(editText)
-                .setNegativeButton("取消", (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setPositiveButton("确定", (dialog, which) -> {
-                    String id=editText.getText().toString().trim();
-                    if(!TextUtils.isEmpty(id)){
-                        viewModel.SearchPerson(id);
-                    }else {
-                        ToastManager.toast("请输入身份证号码",ToastManager.ERROR);
-                    }
-                });
+                .setView(view);
         AlertDialog alert=builder.create();
+        cancle.setOnClickListener(v -> alert.dismiss());
+        sure.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(name.getText().toString().trim())||TextUtils.isEmpty(num.getText().toString().trim())){
+                ToastManager.toast("请填写完整信息",ToastManager.ERROR);
+            }else {
+                viewModel.SearchPerson(num.getText().toString().trim());
+                alert.dismiss();
+            }
+        });
         alert.show();
     }
 }

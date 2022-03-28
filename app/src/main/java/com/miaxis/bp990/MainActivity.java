@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     private MaterialDialog quitDialog;
     private String root;
     private MainViewModel viewModel;
+    private int codeType;
 
 
     @Override
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
         viewModel=new ViewModelProvider(this,getDefaultViewModelProviderFactory()).get(MainViewModel.class);
         viewModel.result.observe(this, result -> {
             dismissWaitDialog();
+
             if(result.getCode()== Status.SUCCESS){
                 if(result.getPerson()==null){
                     ToastManager.toast("查无此人",ToastManager.ERROR);
@@ -170,8 +172,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
     public void exitApp() { quitDialog.show(); }
 
     @Override
-    public void checkCamera(Class<?> cls, String title) {
-        checkCameraPermissions(cls,title);
+    public void checkCamera(Class<?> cls, String title,int codeType) {
+        checkCameraPermissions(cls,title,codeType);
     }
 
     private void initDialog() {
@@ -218,7 +220,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
                         String result = CameraScan.parseScanResult(data);
                         byte[] bytes= Base64.decode(result,Base64.DEFAULT);
                         Code code = new Gson().fromJson(new String(bytes),Code.class);
-                        viewModel.searchPerson(code);
+                        if(code.codeType!=this.codeType){
+                            dismissWaitDialog();
+                            ToastManager.toast("扫描二维码类型不对",ToastManager.ERROR);
+                        }else {
+                            viewModel.searchPerson(code);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -255,10 +262,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
      * 检测拍摄权限
      */
     @AfterPermissionGranted(RC_CAMERA)
-    private void checkCameraPermissions(Class<?> cls,String title){
+    private void checkCameraPermissions(Class<?> cls,String title,int codeType){
         String[] perms = {Manifest.permission.CAMERA};
         if (EasyPermissions.hasPermissions(this, perms)) {//有权限
-            startScan(cls,title);
+            startScan(cls,title,codeType);
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this,"App扫码需要用到拍摄权限",
@@ -271,11 +278,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> implements O
      * @param cls
      * @param title
      */
-    private void startScan(Class<?> cls,String title){
+    private void startScan(Class<?> cls,String title,int codeType){
 //        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this,R.anim.in,R.anim.out);
         Intent intent = new Intent(this, cls);
         intent.putExtra(KEY_TITLE,title);
         intent.putExtra(KEY_IS_CONTINUOUS,false);
+        this.codeType=codeType;
         ActivityCompat.startActivityForResult(this,intent,REQUEST_CODE_SCAN,null);
 //        startActivityForResult(intent,REQUEST_CODE_SCAN);
     }

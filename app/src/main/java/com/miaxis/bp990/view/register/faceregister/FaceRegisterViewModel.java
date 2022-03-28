@@ -85,7 +85,7 @@ public class FaceRegisterViewModel extends BaseViewModel {
        Disposable sub= Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             Matrix matrix = new Matrix();
-            matrix.postRotate(CameraManager.getInstance().getPictureOrientation());
+            matrix.postRotate(270);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             emitter.onNext(bitmap);
         })

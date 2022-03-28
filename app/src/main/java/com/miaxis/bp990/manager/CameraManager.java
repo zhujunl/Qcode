@@ -73,12 +73,16 @@ public class CameraManager {
 
     public void openFrontCamera(@NonNull TextureView textureView, OnCameraOpenListener listener) {
         if (frontCamera != null) return;
-        if (Camera.getNumberOfCameras() == 2) {
-            openBackCamera(textureView, listener);
-            return;
-        }
+//        if (Camera.getNumberOfCameras() == 2) {
+//            openBackCamera(textureView, listener);
+//            return;
+//        }
         try {
-            frontCamera = Camera.open(1);
+            Camera camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+            camera.stopPreview();
+            camera.release();
+            frontCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            frontCamera.reconnect();
             Camera.Parameters parameters = frontCamera.getParameters();
             parameters.setPreviewSize(PRE_WIDTH, PRE_HEIGHT);
             parameters.setPictureSize(PIC_WIDTH, PIC_HEIGHT);
@@ -94,7 +98,7 @@ public class CameraManager {
                 }
             }
             frontCamera.setParameters(parameters);
-            frontCamera.setDisplayOrientation(270);
+            frontCamera.setDisplayOrientation(90);
             textureView.setSurfaceTextureListener(frontTextureListener);
             frontCamera.setPreviewCallback(previewCallback);
             frontCamera.startPreview();
@@ -113,10 +117,8 @@ public class CameraManager {
     }
 
     public void closeFrontCamera() {
-        if (Camera.getNumberOfCameras() == 2) {
-            closeBackCamera();
-            return;
-        }
+//
+
         try {
             if (frontCamera != null) {
                 frontCamera.setPreviewCallback(null);
@@ -130,9 +132,9 @@ public class CameraManager {
     }
 
     public Camera getFrontCamera() {
-        if (Camera.getNumberOfCameras() == 2) {
-            return backCamera;
-        }
+//        if (Camera.getNumberOfCameras() == 2) {
+//            return backCamera;
+//        }
         return frontCamera;
     }
 

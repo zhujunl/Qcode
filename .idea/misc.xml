@@ -15,17 +15,24 @@
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/ic_take_photo_white.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/progress_small_holo.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/rounded_button_main_color.xml" value="0.3697916666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/shape_bg_qr.xml" value="0.18541666666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/shape_bg_qr_g.xml" value="0.3697916666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/shape_bg_qr_r.xml" value="0.18541666666666667" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/shape_bg_qr_y.xml" value="0.18541666666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/drawable/zxl_flashlight_selector.xml" value="0.3697916666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/activity_main.xml" value="0.10833333333333334" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/activity_register.xml" value="0.3536458333333333" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/dialog.xml" value="0.33" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/dialog_login.xml" value="0.22" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/dialog_picture.xml" value="0.3536458333333333" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/dialog_result.xml" value="0.33" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_activity.xml" value="0.20104166666666667" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_card.xml" value="0.1265625" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_face.xml" value="0.22" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_face_register.xml" value="0.30927835051546393" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_finger.xml" value="0.15" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_finger_register.xml" value="0.3536458333333333" />
-        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_home.xml" value="0.21875" />
+        <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_home.xml" value="0.5" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_register.xml" value="0.33" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_result.xml" value="0.109375" />
         <entry key="..\:/AndroidProject/demo/BP990/app/src/main/res/layout/fragment_scan.xml" value="0.20104166666666667" />

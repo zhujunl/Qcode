@@ -64,7 +64,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.miaxis.bp990.RoundTextureView
+            <com.miaxis.bp990.view.custom.RoundTextureView
                 android:id="@+id/rtv_camera"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

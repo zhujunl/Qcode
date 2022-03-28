@@ -73,6 +73,7 @@ public class FaceViewModel extends BaseViewModel {
     public void stopFaceVerify() {
         FaceManager.getInstance().stopLoop();
         FaceManager.getInstance().setFeatureListener(null);
+        CameraManager.getInstance().closeFrontCamera();
     }
 
     private FaceManager.OnFeatureExtractListener faceListener = (mxRGBImage, mxFaceInfoEx, feature, mask) -> {

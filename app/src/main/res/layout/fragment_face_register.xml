@@ -31,6 +31,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <TextView
+            android:text="人脸信息采集"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
         <FrameLayout
             android:id="@+id/fl_camera"
             android:layout_width="0dp"
@@ -43,7 +53,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.miaxis.bp990.RoundTextureView
+            <com.miaxis.bp990.view.custom.RoundTextureView
                 android:id="@+id/rtv_camera"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -90,10 +100,10 @@
                 android:background="@drawable/circular_button_grey"
                 android:adjustViewBounds="true"
                 app:layout_constraintWidth_percent="0.15"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_confirm"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/iv_take_photo"
+                app:layout_constraintBottom_toBottomOf="@id/iv_take_photo"
+                app:layout_constraintRight_toLeftOf="@id/iv_take_photo"
+              app:layout_constraintLeft_toLeftOf="parent"/>
 
             <ImageView
                 android:id="@+id/iv_confirm"
@@ -103,10 +113,10 @@
                 android:background="@drawable/circular_button_grey"
                 android:adjustViewBounds="true"
                 app:layout_constraintWidth_percent="0.15"
-                app:layout_constraintStart_toEndOf="@id/iv_retry"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/iv_take_photo"
+                app:layout_constraintBottom_toBottomOf="@id/iv_take_photo"
+                app:layout_constraintLeft_toRightOf="@id/iv_take_photo"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <ProgressBar
                 android:id="@+id/pb_loading"

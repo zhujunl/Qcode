@@ -2,21 +2,30 @@ package com.miaxis.bp990.view.finger;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
 import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
+import com.miaxis.bp990.been.MxPerson;
 import com.miaxis.bp990.data.entity.Person;
 import com.miaxis.bp990.databinding.FragmentFingerBinding;
+import com.miaxis.bp990.util.QRCodeUtil;
 import com.miaxis.bp990.view.face.FaceFragment;
 import com.miaxis.bp990.view.home.HomeFragmet;
 
-import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -159,10 +168,24 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         }
     };
 
+    ImageView qr;
+    TextView code;
     private void showResult(){
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        View v= LayoutInflater.from(getActivity()).inflate(R.layout.dialog_result,null);
+        qr=v.findViewById(R.id.h_code);
+        code=v.findViewById(R.id.h_code_s);
+        String json = new Gson().toJson(new MxPerson(person.getName(), person.getCardnum(), person.getCodestatus()));
+        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+        String encode = Base64.encodeToString(bytes, 0, bytes.length, Base64.DEFAULT);
+        int color=getPersonStauts(person.getCodestatus());
+        Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(encode,
+                650,650,"UTF-8","H","1",
+                color, Color.WHITE, BitmapFactory.decodeResource(getResources(),R.drawable.logo),
+                0.2F,null);
         builder.setTitle("核验通过")
-                .setMessage("健康状态："+getPersonStauts(person.getCodestatus()))
+                //                .setMessage("健康状态："+getPersonStauts(person.getCodestatus()))
+                .setView(v)
                 .setCancelable(false)
                 .setPositiveButton("确认", (dialog, which) -> {
                     mListener.replaceFragment(HomeFragmet.getInstance());
@@ -170,40 +193,30 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
                 });
         AlertDialog alert=builder.create();
         alert.show();
-        try {
-            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-            mAlert.setAccessible(true);
-            Object mAlertController = mAlert.get(alert);
-            Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
-            mMessage.setAccessible(true);
-            TextView mMessageView = (TextView) mMessage.get(mAlertController);
-            if (person.getCodestatus()==0){
-                mMessageView.setTextColor(Color.GREEN);
-            }else if(person.getCodestatus()==1){
-                mMessageView.setTextColor(Color.YELLOW);
-            }else {
-                mMessageView.setTextColor(Color.RED);
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+
+        code.setTextColor(color);
+        qr.setImageBitmap(bitmap);
     }
 
-    private String getPersonStauts(int status){
-        String s="健康";
+    private int getPersonStauts(int status){
+        int color=0xFF2FA664;
         switch (status){
             case 1:
-                s="亚健康";
+                qr.setBackground(getResources().getDrawable(R.drawable.shape_bg_qr_y));
+                code.setText("黄码");
+                color=0xFFFFEB3B;
                 break;
             case 2:
-                s="不健康";
+                qr.setBackground(getResources().getDrawable(R.drawable.shape_bg_qr_r));
+                code.setText("红码");
+                color=0xFFF44336;
                 break;
             default:
-                s="健康";
+                qr.setBackground(getResources().getDrawable(R.drawable.shape_bg_qr_g));
+                color=0xFF2FA664;
+                code.setText("绿码");
                 break;
         }
-        return s;
+        return color;
     }
 }

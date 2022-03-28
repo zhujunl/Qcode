@@ -14,10 +14,10 @@ public class Code {
     public long id;
     public String name;
     public long timestamp;
+    public int codeType;//二维码类型 0 网证，其他 健康码
 
     public Code() {
     }
-
 
     @Override
     public String toString() {
@@ -27,6 +27,7 @@ public class Code {
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", timestamp=" + timestamp +
+                ", codeType=" + codeType +
                 '}';
     }
 }
