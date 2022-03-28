@@ -96,17 +96,19 @@ public class FragmentHealthCode extends BaseBindingFragment<FragmentHealthCodeBi
         this.mScreenBrightness = ScreenUtils.getScreenBrightness(getContext());
 
         Disposable subscribe = Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
-            showLoading("请稍候","正在处理中...");
-            String json = new Gson().toJson(new MxPerson(mName, mIdCardNumber, mStatus));
+            showLoading("请稍候", "正在处理中...");
+            MxPerson mxPerson = new MxPerson(mName, mIdCardNumber, mStatus);
+            mxPerson.codeType = 2;
+            String json = new Gson().toJson(mxPerson);
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             String encode = Base64.encodeToString(bytes, 0, bytes.length, Base64.DEFAULT);
             Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(encode,
-                    650,650,"UTF-8","H","1",
-                    0xFF2FA664, Color.WHITE, BitmapFactory.decodeResource(getResources(),R.drawable.logo),
-                    0.2F,null);
-            if (bitmap!=null){
+                    650, 650, "UTF-8", "H", "1",
+                    0xFF2FA664, Color.WHITE, BitmapFactory.decodeResource(getResources(), R.drawable.logo),
+                    0.2F, null);
+            if (bitmap != null) {
                 emitter.onNext(bitmap);
-            }else {
+            } else {
                 throw new NullPointerException("No bitmap");
             }
         }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
@@ -124,9 +126,9 @@ public class FragmentHealthCode extends BaseBindingFragment<FragmentHealthCodeBi
     @Override
     public void onResume() {
         super.onResume();
-        ScreenUtils.setScreenMode(getContext(),0);
-        ScreenUtils.saveScreenBrightness(getContext(),255);
-        ScreenUtils.setScreenBrightness(getActivity(),255);
+        ScreenUtils.setScreenMode(getContext(), 0);
+        ScreenUtils.saveScreenBrightness(getContext(), 255);
+        ScreenUtils.setScreenBrightness(getActivity(), 255);
     }
 
     private int mScreenMode;
@@ -135,9 +137,9 @@ public class FragmentHealthCode extends BaseBindingFragment<FragmentHealthCodeBi
     @Override
     public void onPause() {
         super.onPause();
-        ScreenUtils.setScreenMode(getContext(),this.mScreenMode);
-        ScreenUtils.saveScreenBrightness(getContext(),this.mScreenBrightness);
-        ScreenUtils.setScreenBrightness(getActivity(),this.mScreenBrightness);
+        ScreenUtils.setScreenMode(getContext(), this.mScreenMode);
+        ScreenUtils.saveScreenBrightness(getContext(), this.mScreenBrightness);
+        ScreenUtils.setScreenBrightness(getActivity(), this.mScreenBrightness);
     }
 
 }

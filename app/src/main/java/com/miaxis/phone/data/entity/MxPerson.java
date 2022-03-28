@@ -2,6 +2,7 @@ package com.miaxis.phone.data.entity;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import kotlin.jvm.Transient;
 
 /**
  * @author ZJL
@@ -19,6 +20,8 @@ public class MxPerson {
     public String cardNumber;//身份证号码
     public int codeStatus;//健康码状态 0绿码  1黄码  2红码
     public long timestamp;
+    @Transient
+    public int codeType;//二维码类型 1 网证，2 健康码
 
     public MxPerson(String name, String cardNumber, int codeStatus) {
         this.name = name;
@@ -29,11 +32,13 @@ public class MxPerson {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "MxPerson{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
-                ", codeStatus='" + codeStatus + '\'' +
+                ", codeStatus=" + codeStatus +
+                ", timestamp=" + timestamp +
+                ", codeType=" + codeType +
                 '}';
     }
 }

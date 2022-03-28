@@ -80,19 +80,21 @@ public class FragmentCtid extends BaseBindingFragment<FragmentCtidBinding> {
         createQr();
     }
 
-    private void createQr(){
-        showLoading("请稍候","正在处理中...");
+    private void createQr() {
+        showLoading("请稍候", "正在处理中...");
         Disposable subscribe = Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
-            String json = new Gson().toJson(new MxPerson(mName, mIdCardNumber, -1));
+            MxPerson mxPerson = new MxPerson(mName, mIdCardNumber, -1);
+            mxPerson.codeType = 1;
+            String json = new Gson().toJson(mxPerson);
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             String encode = Base64.encodeToString(bytes, 0, bytes.length, Base64.DEFAULT);
             Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(encode,
-                    650,650,"UTF-8","H","1",
-                    Color.BLACK, Color.WHITE, BitmapFactory.decodeResource(getResources(),R.mipmap.ic_ctid_logo),
-                    0.2F,null);
-            if (bitmap!=null){
+                    650, 650, "UTF-8", "H", "1",
+                    Color.BLACK, Color.WHITE, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_ctid_logo),
+                    0.2F, null);
+            if (bitmap != null) {
                 emitter.onNext(bitmap);
-            }else {
+            } else {
                 throw new NullPointerException("No bitmap");
             }
         }).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
@@ -110,9 +112,9 @@ public class FragmentCtid extends BaseBindingFragment<FragmentCtidBinding> {
     @Override
     public void onResume() {
         super.onResume();
-        ScreenUtils.setScreenMode(getContext(),0);
-        ScreenUtils.saveScreenBrightness(getContext(),255);
-        ScreenUtils.setScreenBrightness(getActivity(),255);
+        ScreenUtils.setScreenMode(getContext(), 0);
+        ScreenUtils.saveScreenBrightness(getContext(), 255);
+        ScreenUtils.setScreenBrightness(getActivity(), 255);
     }
 
     private int mScreenMode;
@@ -121,9 +123,9 @@ public class FragmentCtid extends BaseBindingFragment<FragmentCtidBinding> {
     @Override
     public void onPause() {
         super.onPause();
-        ScreenUtils.setScreenMode(getContext(),this.mScreenMode);
-        ScreenUtils.saveScreenBrightness(getContext(),this.mScreenBrightness);
-        ScreenUtils.setScreenBrightness(getActivity(),this.mScreenBrightness);
+        ScreenUtils.setScreenMode(getContext(), this.mScreenMode);
+        ScreenUtils.saveScreenBrightness(getContext(), this.mScreenBrightness);
+        ScreenUtils.setScreenBrightness(getActivity(), this.mScreenBrightness);
     }
 
 }
