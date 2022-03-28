@@ -1,22 +1,18 @@
 package com.miaxis.bp990.view.register;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.auxiliary.OnLimitClickHelper;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
 import com.miaxis.bp990.databinding.FragmentRegisterBinding;
 import com.miaxis.bp990.event.FaceRegisterEvent;
-import com.miaxis.bp990.event.FingerRegisterEvent;
 import com.miaxis.bp990.manager.ToastManager;
 import com.miaxis.bp990.util.IDCardUtils;
 import com.miaxis.bp990.view.register.faceregister.FaceRegisterFragment;
-import com.miaxis.bp990.view.register.fingerregister.FingerRegisterFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,7 +55,7 @@ public class RegisterFragment extends BaseViewModelFragment<FragmentRegisterBind
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override
@@ -72,8 +68,6 @@ public class RegisterFragment extends BaseViewModelFragment<FragmentRegisterBind
             }
         });
         binding.tvHeader.setOnClickListener(new OnLimitClickHelper(view -> mListener.replaceFragment(FaceRegisterFragment.getIntance())));
-        binding.tvFinger1.setOnClickListener(new OnLimitClickHelper(view -> mListener.replaceFragment(FingerRegisterFragment.getInstance(RegisterViewModel.FINGER1))));
-        binding.tvFinger2.setOnClickListener(new OnLimitClickHelper(view -> mListener.replaceFragment(FingerRegisterFragment.getInstance(RegisterViewModel.FINGER2))));
         binding.btnRegister.setOnClickListener(v -> {
             if (viewModel.checkInput()) {
                 String tip=IDCardUtils.IDCardValidate(viewModel.number.get());
@@ -116,21 +110,6 @@ public class RegisterFragment extends BaseViewModelFragment<FragmentRegisterBind
         EventBus.getDefault().removeStickyEvent(event);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onFingerRegisterEvent(FingerRegisterEvent event) {
-        String feature = event.getFeature();
-        if (TextUtils.isEmpty(feature)) return;
-        if (TextUtils.equals(RegisterViewModel.FINGER1, event.getMark())) {
-            viewModel.finger1FeatureHint.set("已采集");
-            binding.tvFinger1.setOnClickListener(null);
-            viewModel.setFingerFeature1(feature);
-        } else {
-            viewModel.finger2FeatureHint.set("已采集");
-            binding.tvFinger2.setOnClickListener(null);
-            viewModel.setFingerFeature2(feature);
-        }
-        EventBus.getDefault().removeStickyEvent(event);
-    }
 
     @Override
     public void onDestroyView() {

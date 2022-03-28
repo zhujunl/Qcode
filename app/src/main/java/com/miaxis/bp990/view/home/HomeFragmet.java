@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.miaxis.bp990.BR;
 import com.miaxis.bp990.BuildConfig;
 import com.miaxis.bp990.CaptureFragmentActivity;
 import com.miaxis.bp990.R;
@@ -63,7 +62,7 @@ public class HomeFragmet extends BaseViewModelFragment<FragmentHomeBinding,HomeV
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override

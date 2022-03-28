@@ -69,14 +69,14 @@ public class FingerViewModel extends BaseViewModel {
         public void onFingerReceive(byte[] feature, Bitmap image, boolean hasImage) {
             Person person=personlive.getValue();
             if (person == null) return;
-            if (TextUtils.isEmpty(person.getFinger1()) || TextUtils.isEmpty(person.getFinger1())) {
+            if (TextUtils.isEmpty(person.getFingerprint0()) || TextUtils.isEmpty(person.getFingerprint1())) {
                 return;
             }
             Log.e("FingerManager:","null");
             if (feature != null) {
                 List<String> featureList = new ArrayList<>();
-                featureList.add(person.getFinger1());
-                featureList.add(person.getFinger2());
+                featureList.add(person.getFingerprint0());
+                featureList.add(person.getFingerprint1());
                 for (String value : featureList) {
                     boolean result = false;
                     try {

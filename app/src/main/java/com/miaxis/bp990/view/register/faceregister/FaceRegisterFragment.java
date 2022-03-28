@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
-import com.miaxis.bp990.BR;
+
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.RoundBorderView;
 import com.miaxis.bp990.RoundFrameLayout;
@@ -61,7 +61,7 @@ public class FaceRegisterFragment extends BaseViewModelFragment<FragmentFaceRegi
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
-import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
@@ -84,7 +83,7 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override
@@ -93,6 +92,8 @@ public class FingerFragment extends BaseViewModelFragment<FragmentFingerBinding,
         binding.ivBack.setOnClickListener(v->onBackPressed());
         binding.tvSwitch.setOnClickListener(v->{mListener.replaceFragment(FaceFragment.getInstance(person));});
         binding.title.setText(person.getName());
+        binding.finger0Tv.setText(person.getFingerprintPosition0());
+        binding.finger1Tv.setText(person.getFingerprintPosition1());
         viewModel.fingerResultFlag.observe(this, fingerResultFlagObserver);
         viewModel.initFingerResult.observe(this, status -> {
             switch (status) {

@@ -66,15 +66,20 @@ public class CardViewModel extends BaseViewModel {
                 idCardRecord = data;
                 cardMessage.set(message);
                 Log.e("CardManager:","读卡成功");
+                IDCardRecord idcard=getIdCardRecord();
                 if (idCardRecord != null) {
                     Disposable sub = Observable.create((ObservableOnSubscribe<Boolean>) p->{
-                        String cardnum=getIdCardRecord().getCardNumber();
+                        String cardnum=idcard.getCardNumber();
                         person= PersonManager.getInstance().FindPersonByCard(cardnum);
                         SystemClock.sleep(1000);
                         p.onNext(Boolean.TRUE);
                     } ).subscribeOn(Schedulers.from(App.getInstance().getThreadExecutor()))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(flag -> {
+                                person.setFingerprint0(idcard.getFingerprint0());
+                                person.setFingerprint1(idcard.getFingerprint1());
+                                person.setFingerprintPosition0(idcard.getFingerprintPosition0());
+                                person.setFingerprintPosition1(idcard.getFingerprintPosition1());
                                 result.setValue(new ResultSearch(Status.SUCCESS,person,""));
                             }, throwable -> {
                                 result.setValue(new ResultSearch(Status.FAILED,null,throwable.getMessage()));

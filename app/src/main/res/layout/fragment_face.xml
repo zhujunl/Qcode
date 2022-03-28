@@ -45,12 +45,14 @@
             android:text="切换指纹"
             android:gravity="center"
             android:textColor="@color/main_color"
+            android:visibility="invisible"
             app:layout_constraintWidth_percent="0.3"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_back"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back"/>
+            app:layout_constraintBottom_toBottomOf="@id/iv_back"
+            tools:visibility="visible"/>
 
         <FrameLayout
             android:id="@+id/fl_camera"

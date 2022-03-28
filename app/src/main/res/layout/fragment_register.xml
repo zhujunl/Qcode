@@ -216,118 +216,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_finger1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintHeight_percent="0.075"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_header">
-
-            <TextView
-                android:id="@+id/tv_finger1_hint"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="指  纹  一"
-                android:textSize="14sp"
-                android:gravity="center"
-                app:layout_constraintWidth_percent="0.2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="0dp"
-                android:background="@color/lightgrey"
-                app:layout_constraintHeight_percent="0.5"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_finger1"
-                app:layout_constraintStart_toEndOf="@id/tv_finger1_hint"/>
-
-            <TextView
-                android:id="@+id/tv_finger1"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="@{viewmodel.finger1FeatureHint}"
-                android:gravity="center|start"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintWidth_percent="0.75"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/lightgrey"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_finger2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintHeight_percent="0.075"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_finger1">
-
-            <TextView
-                android:id="@+id/tv_finger2_hint"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="指  纹  二"
-                android:textSize="14sp"
-                android:gravity="center"
-                app:layout_constraintWidth_percent="0.2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="0dp"
-                android:background="@color/lightgrey"
-                app:layout_constraintHeight_percent="0.5"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_finger2"
-                app:layout_constraintStart_toEndOf="@id/tv_finger2_hint"/>
-
-            <TextView
-                android:id="@+id/tv_finger2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="@{viewmodel.finger2FeatureHint}"
-                android:gravity="center|start"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintWidth_percent="0.75"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/lightgrey"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_heath"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -336,7 +224,7 @@
             app:layout_constraintHeight_percent="0.075"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_finger2">
+            app:layout_constraintTop_toBottomOf="@id/cl_header">
 
             <TextView
                 android:id="@+id/tv_heath_hint"

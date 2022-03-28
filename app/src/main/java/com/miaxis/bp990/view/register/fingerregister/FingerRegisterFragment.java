@@ -5,7 +5,6 @@ import android.content.Context;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.miaxis.bp990.BR;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.base.BaseViewModelFragment;
 import com.miaxis.bp990.base.OnFragmentInteractionListener;
@@ -68,7 +67,7 @@ public class FingerRegisterFragment extends BaseViewModelFragment<FragmentFinger
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override

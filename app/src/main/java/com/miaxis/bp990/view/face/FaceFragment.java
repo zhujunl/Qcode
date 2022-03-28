@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.miaxis.bp990.BR;
 import com.miaxis.bp990.BuildConfig;
 import com.miaxis.bp990.R;
 import com.miaxis.bp990.RoundBorderView;
@@ -104,7 +104,7 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
 
     @Override
     public int initVariableId() {
-        return BR.viewmodel;
+        return com.miaxis.bp990.BR.viewmodel;
     }
 
     @Override
@@ -114,6 +114,9 @@ public class FaceFragment extends BaseViewModelFragment<FragmentFaceBinding, Fac
 
     @Override
     protected void initView() {
+        if (!TextUtils.isEmpty(person.getFingerprint0())&&!TextUtils.isEmpty(person.getFingerprint1())){
+            binding.tvSwitch.setVisibility(View.VISIBLE);
+        }
         viewModel.personFive.setValue(person);
         facebit=FileUtil.loadBitmap(person.getFacepath());
         viewModel.verifyFailedFlag.observe(this, aBoolean -> {

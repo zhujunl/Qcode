@@ -20,21 +20,31 @@ public class Person   {
    private String name;
    private String cardnum;
    private String facepath;
-   private String finger1;
-   private String finger2;
    private int codestatus;
-
    @Ignore
+   private String fingerprint0;
+   @Ignore
+   private String fingerprintPosition0;
+   @Ignore
+   private String fingerprint1;
+   @Ignore
+   private String fingerprintPosition1;
+
+
    public Person() {
    }
 
-   public Person(String name, String cardnum, String facepath, String finger1, String finger2, int codestatus) {
-      this.name = name;
-      this.cardnum = cardnum;
-      this.facepath = facepath;
-      this.finger1 = finger1;
-      this.finger2 = finger2;
-      this.codestatus = codestatus;
+   private Person(Builder builder) {
+      setId(builder.id);;
+      setName(builder.name);
+      setCardnum(builder.cardnum);
+      setFacepath(builder.facepath);
+      setCodestatus(builder.codestatus);
+      setFingerprint0(builder.fingerprint0);
+      setFingerprintPosition0(builder.fingerprintPosition0);
+      setFingerprint1(builder.fingerprint1);
+      setFingerprintPosition1(builder.fingerprintPosition1);
+
    }
 
    public long getId() {
@@ -69,28 +79,44 @@ public class Person   {
       this.facepath = facepath;
    }
 
-   public String getFinger1() {
-      return finger1;
-   }
-
-   public void setFinger1(String finger1) {
-      this.finger1 = finger1;
-   }
-
-   public String getFinger2() {
-      return finger2;
-   }
-
-   public void setFinger2(String finger2) {
-      this.finger2 = finger2;
-   }
-
    public int getCodestatus() {
       return codestatus;
    }
 
    public void setCodestatus(int codestatus) {
       this.codestatus = codestatus;
+   }
+
+   public String getFingerprint0() {
+      return fingerprint0;
+   }
+
+   public void setFingerprint0(String fingerprint0) {
+      this.fingerprint0 = fingerprint0;
+   }
+
+   public String getFingerprintPosition0() {
+      return fingerprintPosition0;
+   }
+
+   public void setFingerprintPosition0(String fingerprintPosition0) {
+      this.fingerprintPosition0 = fingerprintPosition0;
+   }
+
+   public String getFingerprint1() {
+      return fingerprint1;
+   }
+
+   public void setFingerprint1(String fingerprint1) {
+      this.fingerprint1 = fingerprint1;
+   }
+
+   public String getFingerprintPosition1() {
+      return fingerprintPosition1;
+   }
+
+   public void setFingerprintPosition1(String fingerprintPosition1) {
+      this.fingerprintPosition1 = fingerprintPosition1;
    }
 
    @Override
@@ -100,9 +126,76 @@ public class Person   {
               ", name='" + name + '\'' +
               ", cardnum='" + cardnum + '\'' +
               ", facepath='" + facepath + '\'' +
-              ", finger1='" + finger1 + '\'' +
-              ", finger2='" + finger2 + '\'' +
-              ", codestatus='" + codestatus + '\'' +
+              ", codestatus=" + codestatus +
+              ", fingerprint0='" + fingerprint0 + '\'' +
+              ", fingerprintPosition0='" + fingerprintPosition0 + '\'' +
+              ", fingerprint1='" + fingerprint1 + '\'' +
+              ", fingerprintPosition1='" + fingerprintPosition1 + '\'' +
               '}';
+   }
+
+   public static final class Builder {
+      private long id;
+      private String name;
+      private String cardnum;
+      private String facepath;
+      private int codestatus;
+      private String fingerprint0;
+      private String fingerprintPosition0;
+      private String fingerprint1;
+      private String fingerprintPosition1;
+
+      public Builder() {
+      }
+
+      public Builder id(Long val) {
+         id = val;
+         return this;
+      }
+
+
+      public Builder name(String val){
+         this.name=val;
+         return this;
+      }
+
+      public Builder cardnum(String val){
+         this.cardnum=val;
+         return this;
+      }
+
+      public Builder facepath(String val){
+         this.facepath=val;
+         return this;
+      }
+
+      public Builder codestatus(int val){
+         this.codestatus=val;
+         return this;
+      }
+
+      public Builder fingerprint0(String val){
+         this.fingerprint0=val;
+         return this;
+      }
+
+      public Builder fingerprintPosition0(String  val){
+         this.fingerprint0=val;
+         return this;
+      }
+
+      public Builder fingerprint1(String val){
+         this.fingerprint1=val;
+         return this;
+      }
+
+      public Builder fingerprintPosition1(String val){
+         this.fingerprintPosition1=val;
+         return this;
+      }
+
+      public Person build() {
+         return new Person(this);
+      }
    }
 }

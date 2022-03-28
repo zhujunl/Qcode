@@ -39,16 +39,14 @@ public class RegisterViewModel extends BaseViewModel {
     public ObservableField<Integer> heath = new ObservableField<>();
 
     public ObservableField<String> faceFeatureHint = new ObservableField<>("点击采集");
-    public ObservableField<String> finger1FeatureHint = new ObservableField<>("点击采集");
-    public ObservableField<String> finger2FeatureHint = new ObservableField<>("点击采集");
+
 
     public MutableLiveData<Boolean> registerFlag = new SingleLiveEvent<>();
 
     private String featureCache;
     private String maskFeatureCache;
     private Bitmap headerCache;
-    private String fingerFeature1;
-    private String fingerFeature2;
+
 
     public RegisterViewModel() {
     }
@@ -58,8 +56,6 @@ public class RegisterViewModel extends BaseViewModel {
                 || TextUtils.isEmpty(number.get())
                 || TextUtils.isEmpty(featureCache)
                 || TextUtils.isEmpty(maskFeatureCache)
-                || TextUtils.isEmpty(fingerFeature1)
-                || TextUtils.isEmpty(fingerFeature2)
                 || headerCache == null) {
             return false;
         }
@@ -69,7 +65,12 @@ public class RegisterViewModel extends BaseViewModel {
     public void getCourierByPhone() {
         waitMessage.setValue("注册中，请稍后");
         Disposable subscribe = Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
-            Person person=new Person(name.get(),number.get(),featureCache,fingerFeature1,fingerFeature2,heath.get());
+           Person person=new Person.Builder()
+                   .name(name.get())
+                   .cardnum(number.get())
+                   .facepath(featureCache)
+                   .codestatus(heath.get())
+                   .build();
             PersonManager.getInstance().Save(person);
             SystemClock.sleep(1000);
             emitter.onNext(Boolean.TRUE);
@@ -98,14 +99,6 @@ public class RegisterViewModel extends BaseViewModel {
 
     public void setHeaderCache(Bitmap headerCache) {
         this.headerCache = headerCache;
-    }
-
-    public void setFingerFeature1(String fingerFeature1) {
-        this.fingerFeature1 = fingerFeature1;
-    }
-
-    public void setFingerFeature2(String fingerFeature2) {
-        this.fingerFeature2 = fingerFeature2;
     }
 }
 

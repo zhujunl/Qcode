@@ -197,10 +197,14 @@ public class CardManager {
             byte[] bFingerData1 = new byte[512];
             System.arraycopy(fingerData, 0, bFingerData0, 0, bFingerData0.length);
             System.arraycopy(fingerData, 512, bFingerData1, 0, bFingerData1.length);
-            idCardRecord.setFingerprint0(Base64.encodeToString(bFingerData0, Base64.NO_WRAP));
-            idCardRecord.setFingerprintPosition0(ValueUtil.fingerPositionCovert(bFingerData0[5]));
-            idCardRecord.setFingerprint1(Base64.encodeToString(bFingerData1, Base64.NO_WRAP));
-            idCardRecord.setFingerprintPosition1(ValueUtil.fingerPositionCovert(bFingerData1[5]));
+            if (bFingerData0[5]!=0){
+                idCardRecord.setFingerprint0(Base64.encodeToString(bFingerData0, Base64.NO_WRAP));
+                idCardRecord.setFingerprintPosition0(ValueUtil.fingerPositionCovert(bFingerData0[5]));
+            }
+            if (bFingerData1[5]!=0){
+                idCardRecord.setFingerprint1(Base64.encodeToString(bFingerData1, Base64.NO_WRAP));
+                idCardRecord.setFingerprintPosition1(ValueUtil.fingerPositionCovert(bFingerData1[5]));
+            }
         }
     }
 
